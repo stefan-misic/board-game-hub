@@ -1,13 +1,9 @@
-import { useTranslation } from 'react-i18next';
+import Router from './Router';
 import './App.scss';
 
 function App() {
-  const { t } = useTranslation('app');
-
   return (
-    <>
-      <p>{t('app')}</p>
-    </>
+    <Router />
   );
 }
 
