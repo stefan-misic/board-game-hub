@@ -1,9 +1,12 @@
+import { useTranslation } from 'react-i18next';
 import './App.scss';
 
 function App() {
+  const { t } = useTranslation('app');
+
   return (
     <>
-      <p>App</p>
+      <p>{t('app')}</p>
     </>
   );
 }
