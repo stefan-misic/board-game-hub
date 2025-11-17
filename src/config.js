@@ -7,7 +7,8 @@ const {
 
 const config = {
   env: VITE_ENV,
-  appUrl: appUrl
+  appUrl: appUrl,
+  servicesDir: '/api'
 };
 
 export default config;
