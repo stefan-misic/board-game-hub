@@ -1,19 +1,7 @@
-import { configureStore, createSlice } from '@reduxjs/toolkit';
-
-const appInitialState = {
-  0: 'app'
-};
-
-const appSlice = createSlice({
-  name: 'app',
-  initialState: appInitialState,
-  reducers: {}
-});
+import { configureStore } from '@reduxjs/toolkit';
 
 const store = configureStore({
-  reducer: {
-    app: appSlice.reducer
-  }
+  reducer: {}
 });
 
 export default store;

@@ -1,14 +1,11 @@
-import { useTranslation } from 'react-i18next';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
 
 import Layout from './containers/Layout/Layout';
 
 const Router = () => {
-  const { t } = useTranslation('app');
-
   const routes = [
     { path: '/', element: location.hash === '' && <Navigate to='bgh' /> },
-    { path: '/bgh', element: <p>{t('app')}</p> }
+    { path: '/bgh', element: <div></div> }
   ];
 
   return (
@@ -24,7 +21,7 @@ const Router = () => {
             />
           ))}
 
-          <Route element={<p>{t('app')}</p>} path='*' />
+          <Route element={<div></div>} path='*' />
         </Routes>
       </Layout>
     </BrowserRouter>
