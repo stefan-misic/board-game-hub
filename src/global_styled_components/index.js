@@ -7,6 +7,8 @@ export const PageContainer = styled(Box)`
     border-radius: 6px;
     box-shadow: ${({ theme }) => theme.palette.shadow};
     height: 100%;
+    margin: 0 auto;
+    max-width: 1440px;
     padding: 1.5rem;
     width: 100%;
 `;

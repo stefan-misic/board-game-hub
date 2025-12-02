@@ -1,7 +1,7 @@
-import AddDesignerPage from './pages/AddDesignerPage';
+import CreateDesignerPage from './pages/CreateDesignerPage';
 
 const DesignersRoutes = [
-  { path: '/designers/create', element: <AddDesignerPage /> }
+  { path: '/designers/create', element: <CreateDesignerPage /> }
 ];
 
 export default DesignersRoutes;
