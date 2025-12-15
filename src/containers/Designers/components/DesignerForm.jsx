@@ -7,6 +7,7 @@ import TextField from '@mui/material/TextField';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import ImageUpload from '../../../components/ImageUpload/ImageUpload';
 import { defaultValues, getSchema } from './DesignerForm.schema';
 
 const DesignerForm = () => {
@@ -23,8 +24,18 @@ const DesignerForm = () => {
 
   return (
     <Grid container spacing={2}>
-      <Grid size={{ sm: 12, md: 2 }}>
-        image
+      <Grid size={{ xs: 12, sm: 12, md: 2 }}>
+        <Controller
+          control={control}
+          name='image'
+          render={({ field: { onChange, value } }) => (
+            <ImageUpload
+              alternativeText={td('avatar')}
+              onImageUpload={onChange}
+              value={value}
+            />
+          )}
+        />
       </Grid>
       <Grid container size={{ sm: 12, md: 8, lg: 6, xl: 4 }} spacing={2}>
         <Grid size={12}>
@@ -79,11 +90,17 @@ const DesignerForm = () => {
           <Button
             onClick={handleSubmit(handleDesignerFormSubmit)}
             sx={{ mr: 1 }}
+            size='large'
             variant='contained'
           >
             {tb('create')}
           </Button>
-          <Button variant='outlined'>{tb('cancel')}</Button>
+          <Button
+            size='large'
+            variant='outlined'
+          >
+            {tb('cancel')}
+          </Button>
         </Grid>
       </Grid>
     </Grid>

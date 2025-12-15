@@ -1,4 +1,5 @@
 export default {
   cancel: 'Cancel',
-  create: 'Create'
+  create: 'Create',
+  upload: 'Upload'
 };
