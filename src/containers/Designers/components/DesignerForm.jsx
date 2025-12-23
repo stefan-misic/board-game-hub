@@ -4,10 +4,12 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
+import { useMutation } from '@tanstack/react-query';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import ImageUpload from '../../../components/ImageUpload/ImageUpload';
+import { createDesignerService } from '../../../services/designers.services';
 import { defaultValues, getSchema } from './DesignerForm.schema';
 
 const DesignerForm = () => {
@@ -18,8 +20,20 @@ const DesignerForm = () => {
   const schema = getSchema(tv);
   const { control, formState: { errors }, handleSubmit } = useForm({ defaultValues, resolver: yupResolver(schema) });
 
+  const { mutate: createDesignerMutation } = useMutation({
+    mutationFn: (designerData) => {
+      return createDesignerService(designerData);
+    },
+    onSuccess: (successData) => {
+      console.log('successData', successData);
+    },
+    onError: (errorData) => {
+      console.log('errorData', errorData);
+    }
+  });
+
   const handleDesignerFormSubmit = (submittedData) => {
-    console.log('submittedData', submittedData);
+    createDesignerMutation(submittedData);
   };
 
   return (
