@@ -12,7 +12,7 @@ import { v4 as uuid } from 'uuid';
 
 import ImageUpload from '../../../components/ImageUpload/ImageUpload';
 import { createDesignerService } from '../../../services/designers.services';
-import { setIsLoading } from '../../../store/global.slice';
+import { setHasMessage, setIsLoading } from '../../../store/global.slice';
 import { defaultValues, getSchema } from './DesignerForm.schema';
 
 const DesignerForm = () => {
@@ -31,9 +31,11 @@ const DesignerForm = () => {
     },
     onSuccess: (response) => {
       dispatch(setIsLoading(false));
+      dispatch(setHasMessage({ hasMessage: true, message: td('designerCreated'), messageType: 'success' }));
     },
     onError: (error) => {
       dispatch(setIsLoading(false));
+      dispatch(setHasMessage({ hasMessage: true, message: error, messageType: 'error' }));
     }
   });
 

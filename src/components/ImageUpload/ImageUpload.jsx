@@ -8,13 +8,14 @@ import { useDispatch } from 'react-redux';
 import { v4 as uuid } from 'uuid';
 
 import { uploadFileService } from '../../services/storage.services';
-import { setIsLoading } from '../../store/global.slice';
+import { setHasMessage, setIsLoading } from '../../store/global.slice';
 import { StyledAvatar } from './ImageUpload.styled';
 
 const ImageUpload = ({ alternativeText, onImageUpload }) => {
   const dispatch = useDispatch();
   const [image, setImage] = useState('');
   const { t: tb } = useTranslation('buttons');
+  const { t: tm } = useTranslation('messages');
 
   const { mutate: uploadImageMutation } = useMutation({
     mutationFn: ({ id, file }) => {
@@ -23,9 +24,11 @@ const ImageUpload = ({ alternativeText, onImageUpload }) => {
     },
     onSuccess: (response) => {
       dispatch(setIsLoading(false));
+      dispatch(setHasMessage({ hasMessage: true, message: tm('imageUploaded'), messageType: 'success' }));
     },
     onError: (error) => {
       dispatch(setIsLoading(false));
+      dispatch(setHasMessage({ hasMessage: true, message: error, messageType: 'error' }));
     }
   });
 
