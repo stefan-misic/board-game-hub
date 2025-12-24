@@ -1,4 +1,4 @@
-import { Client, TablesDB } from 'appwrite';
+import { Client, Storage, TablesDB } from 'appwrite';
 
 import config from '../../config';
 
@@ -9,3 +9,5 @@ client
   .setProject(config.appwriteConfig.projectId);
 
 export const tablesDB = new TablesDB(client);
+
+export const storage = new Storage(client);

@@ -25,11 +25,11 @@ const DesignerForm = () => {
     mutationFn: (designerData) => {
       return createDesignerService(uuid(), designerData);
     },
-    onSuccess: (successData) => {
-      console.log('successData', successData);
+    onSuccess: (response) => {
+      console.log('response', response);
     },
-    onError: (errorData) => {
-      console.log('errorData', errorData);
+    onError: (error) => {
+      console.log('error', error);
     }
   });
 
@@ -40,17 +40,16 @@ const DesignerForm = () => {
   return (
     <Grid container spacing={2}>
       <Grid size={{ xs: 12, sm: 12, md: 2 }}>
-        {/* <Controller
+        <Controller
           control={control}
-          name='image'
-          render={({ field: { onChange, value } }) => (
+          name='image_id'
+          render={({ field: { onChange } }) => (
             <ImageUpload
               alternativeText={td('avatar')}
               onImageUpload={onChange}
-              value={value}
             />
           )}
-        /> */}
+        />
       </Grid>
       <Grid container size={{ sm: 12, md: 8, lg: 6, xl: 4 }} spacing={2}>
         <Grid size={12}>
