@@ -7,13 +7,16 @@ import TextField from '@mui/material/TextField';
 import { useMutation } from '@tanstack/react-query';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 import { v4 as uuid } from 'uuid';
 
 import ImageUpload from '../../../components/ImageUpload/ImageUpload';
 import { createDesignerService } from '../../../services/designers.services';
+import { setIsLoading } from '../../../store/global.slice';
 import { defaultValues, getSchema } from './DesignerForm.schema';
 
 const DesignerForm = () => {
+  const dispatch = useDispatch();
   const { t: tb } = useTranslation('buttons');
   const { t: td } = useTranslation('designers');
   const { t: tv } = useTranslation('validation');
@@ -23,13 +26,14 @@ const DesignerForm = () => {
 
   const { mutate: createDesignerMutation } = useMutation({
     mutationFn: (designerData) => {
+      dispatch(setIsLoading(true));
       return createDesignerService(uuid(), designerData);
     },
     onSuccess: (response) => {
-      console.log('response', response);
+      dispatch(setIsLoading(false));
     },
     onError: (error) => {
-      console.log('error', error);
+      dispatch(setIsLoading(false));
     }
   });
 

@@ -4,24 +4,28 @@ import Stack from '@mui/material/Stack';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 import { v4 as uuid } from 'uuid';
 
 import { uploadFileService } from '../../services/storage.services';
+import { setIsLoading } from '../../store/global.slice';
 import { StyledAvatar } from './ImageUpload.styled';
 
 const ImageUpload = ({ alternativeText, onImageUpload }) => {
+  const dispatch = useDispatch();
   const [image, setImage] = useState('');
   const { t: tb } = useTranslation('buttons');
 
   const { mutate: uploadImageMutation } = useMutation({
     mutationFn: ({ id, file }) => {
+      dispatch(setIsLoading(true));
       return uploadFileService(id, file);
     },
     onSuccess: (response) => {
-      console.log('response', response);
+      dispatch(setIsLoading(false));
     },
     onError: (error) => {
-      console.log('error', error);
+      dispatch(setIsLoading(false));
     }
   });
 

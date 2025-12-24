@@ -3,7 +3,7 @@ import DesignerForm from '../components/DesignerForm';
 
 const CreateDesignerPage = () => {
   return (
-    <PageContainer>
+    <PageContainer elevation={4}>
       <DesignerForm />
     </PageContainer>
   );
