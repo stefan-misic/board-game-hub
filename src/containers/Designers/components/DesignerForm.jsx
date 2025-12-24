@@ -7,6 +7,7 @@ import TextField from '@mui/material/TextField';
 import { useMutation } from '@tanstack/react-query';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { v4 as uuid } from 'uuid';
 
 import ImageUpload from '../../../components/ImageUpload/ImageUpload';
 import { createDesignerService } from '../../../services/designers.services';
@@ -22,7 +23,7 @@ const DesignerForm = () => {
 
   const { mutate: createDesignerMutation } = useMutation({
     mutationFn: (designerData) => {
-      return createDesignerService(designerData);
+      return createDesignerService(uuid(), designerData);
     },
     onSuccess: (successData) => {
       console.log('successData', successData);
@@ -39,7 +40,7 @@ const DesignerForm = () => {
   return (
     <Grid container spacing={2}>
       <Grid size={{ xs: 12, sm: 12, md: 2 }}>
-        <Controller
+        {/* <Controller
           control={control}
           name='image'
           render={({ field: { onChange, value } }) => (
@@ -49,7 +50,7 @@ const DesignerForm = () => {
               value={value}
             />
           )}
-        />
+        /> */}
       </Grid>
       <Grid container size={{ sm: 12, md: 8, lg: 6, xl: 4 }} spacing={2}>
         <Grid size={12}>

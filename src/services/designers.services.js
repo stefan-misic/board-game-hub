@@ -1,9 +1,15 @@
-import { addDoc, collection } from 'firebase/firestore';
+import config from '../config';
+import { tablesDB } from '../lib/appwrite';
 
-import db from '../lib/firebase';
+const designersTableId = 'designers';
 
-export const createDesignerService = async (body) => {
-  const docRef = await addDoc(collection(db, 'designers'), body);
+export const createDesignerService = async (id, body) => {
+  const response = await tablesDB.createRow({
+    databaseId: config.appwriteConfig.databaseId,
+    tableId: designersTableId,
+    rowId: id,
+    data: body,
+  });
 
-  return docRef;
+  return response;
 };
