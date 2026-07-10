@@ -5,11 +5,10 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
-import { v4 as uuid } from 'uuid';
 
+import { StyledAvatar } from '../../global_styled_components';
 import { uploadFileService } from '../../services/storage.services';
 import { setHasMessage, setIsLoading } from '../../store/global.slice';
-import { StyledAvatar } from './ImageUpload.styled';
 
 const ImageUpload = ({ alternativeText, onImageUpload }) => {
   const dispatch = useDispatch();
@@ -18,12 +17,13 @@ const ImageUpload = ({ alternativeText, onImageUpload }) => {
   const { t: tm } = useTranslation('messages');
 
   const { mutate: uploadImageMutation } = useMutation({
-    mutationFn: ({ id, file }) => {
+    mutationFn: (uploadedFile) => {
       dispatch(setIsLoading(true));
-      return uploadFileService(id, file);
+      return uploadFileService(uploadedFile);
     },
     onSuccess: (response) => {
       dispatch(setIsLoading(false));
+      onImageUpload(response?.$id);
       dispatch(setHasMessage({ hasMessage: true, message: tm('imageUploaded'), messageType: 'success' }));
     },
     onError: (error) => {
@@ -40,9 +40,8 @@ const ImageUpload = ({ alternativeText, onImageUpload }) => {
         setImage(reader.result);
       };
       reader.readAsDataURL(file);
-      const id = uuid();
-      onImageUpload(id);
-      uploadImageMutation({ id, file });
+      
+      uploadImageMutation(file);
     }
   };
 

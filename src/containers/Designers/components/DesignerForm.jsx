@@ -11,6 +11,7 @@ import { useMutation } from '@tanstack/react-query';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router';
 
 import ImageUpload from '../../../components/ImageUpload/ImageUpload';
 import { createDesignerService } from '../../../services/designers.services';
@@ -19,6 +20,7 @@ import { defaultValues, getSchema } from './DesignerForm.schema';
 
 const DesignerForm = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { t: tb } = useTranslation('buttons');
   const { t: td } = useTranslation('designers');
   const { t: tv } = useTranslation('validation');
@@ -33,6 +35,7 @@ const DesignerForm = () => {
     },
     onSuccess: (response) => {
       dispatch(setIsLoading(false));
+      navigate(`/designers/${response?.$id}`);
       dispatch(setHasMessage({ hasMessage: true, message: td('designerCreated'), messageType: 'success' }));
     },
     onError: (error) => {

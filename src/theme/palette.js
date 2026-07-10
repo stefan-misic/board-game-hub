@@ -16,6 +16,7 @@ export default {
     main: green[500]
   },
   text: {
-    contrast: white
+    contrast: white,
+    label: grey[600]
   }
 };
