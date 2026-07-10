@@ -3,14 +3,14 @@ import * as yup from 'yup';
 export const defaultValues = {
   display_name: '',
   image_id: '',
-  is_essential: false,
-  name: ''
+  name: '',
+  type: 'other'
 };
 
 export const getSchema = (tv) =>
   yup.object({
     display_name: yup.string().required(tv('requiredField')),
     image_id: yup.string(),
-    is_essential: yup.boolean(),
-    name: yup.string()
+    name: yup.string(),
+    type: yup.string()
   }).required();

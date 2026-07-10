@@ -1,14 +1,16 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import { useMutation } from '@tanstack/react-query';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
-import { v4 as uuid } from 'uuid';
 
 import ImageUpload from '../../../components/ImageUpload/ImageUpload';
 import { createDesignerService } from '../../../services/designers.services';
@@ -27,7 +29,7 @@ const DesignerForm = () => {
   const { mutate: createDesignerMutation } = useMutation({
     mutationFn: (designerData) => {
       dispatch(setIsLoading(true));
-      return createDesignerService(uuid(), designerData);
+      return createDesignerService(designerData);
     },
     onSuccess: (response) => {
       dispatch(setIsLoading(false));
@@ -92,24 +94,28 @@ const DesignerForm = () => {
         <Grid size={12}>
           <Controller
             control={control}
-            name='is_essential'
+            name='type'
             render={({ field: { onChange, value } }) => (
-              <FormControlLabel
-                label={td('isEssential')}
-                control={
-                  <Checkbox
-                    checked={value}
-                    onChange={onChange}
-                  />
-                }
-              />
+              <FormControl fullWidth>
+                <InputLabel id='designer-type-label'>{td('type')}</InputLabel>
+                <Select
+                  id='designer-type'
+                  label={td('type')}
+                  labelId='designer-type-label'
+                  onChange={onChange}
+                  value={value}
+                >
+                  <MenuItem value='top'>{td('top')}</MenuItem>
+                  <MenuItem value='essential'>{td('essential')}</MenuItem>
+                  <MenuItem value='other'>{td('other')}</MenuItem>
+                </Select>
+              </FormControl>
             )}
           />
         </Grid>
-        <Grid size={12}>
+        <Grid container>
           <Button
             onClick={handleSubmit(handleDesignerFormSubmit)}
-            sx={{ mr: 1 }}
             size='large'
             variant='contained'
           >
