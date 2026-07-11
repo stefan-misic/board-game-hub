@@ -4,8 +4,10 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
 import InputLabel from '@mui/material/InputLabel';
+import ListItemIcon from '@mui/material/ListItemIcon';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { useMutation } from '@tanstack/react-query';
 import { Controller, useForm } from 'react-hook-form';
@@ -14,12 +16,14 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 
 import ImageUpload from '../../../components/ImageUpload/ImageUpload';
+import useIcons from '../../../hooks/useIcons';
 import { createDesignerService } from '../../../services/designers.services';
 import { setHasMessage, setIsLoading } from '../../../store/global.slice';
 import { defaultValues, getSchema } from './DesignerForm.schema';
 
 const DesignerForm = () => {
   const dispatch = useDispatch();
+  const { buttons: buttonIcons, designers: designerIcons } = useIcons();
   const navigate = useNavigate();
   const { t: tb } = useTranslation('buttons');
   const { t: td } = useTranslation('designers');
@@ -34,7 +38,6 @@ const DesignerForm = () => {
       return createDesignerService(designerData);
     },
     onSuccess: (response) => {
-      dispatch(setIsLoading(false));
       navigate(`/designers/${response?.$id}`);
       dispatch(setHasMessage({ hasMessage: true, message: td('designerCreated'), messageType: 'success' }));
     },
@@ -106,11 +109,26 @@ const DesignerForm = () => {
                   label={td('type')}
                   labelId='designer-type-label'
                   onChange={onChange}
+                  renderValue={() => (
+                    <Stack direction='row' gap={1}>
+                      {designerIcons[value]}
+                      {td(value)}
+                    </Stack>
+                  )}
                   value={value}
                 >
-                  <MenuItem value='top'>{td('top')}</MenuItem>
-                  <MenuItem value='essential'>{td('essential')}</MenuItem>
-                  <MenuItem value='other'>{td('other')}</MenuItem>
+                  <MenuItem value='top'>
+                    <ListItemIcon>{designerIcons.top}</ListItemIcon>
+                    {td('top')}
+                  </MenuItem>
+                  <MenuItem value='essential'>
+                    <ListItemIcon>{designerIcons.essential}</ListItemIcon>
+                    {td('essential')}
+                  </MenuItem>
+                  <MenuItem value='other'>
+                    <ListItemIcon>{designerIcons.other}</ListItemIcon>
+                    {td('other')}
+                  </MenuItem>
                 </Select>
               </FormControl>
             )}
@@ -120,12 +138,14 @@ const DesignerForm = () => {
           <Button
             onClick={handleSubmit(handleDesignerFormSubmit)}
             size='large'
+            startIcon={buttonIcons.create}
             variant='contained'
           >
             {tb('create')}
           </Button>
           <Button
             size='large'
+            startIcon={buttonIcons.cancel}
             variant='outlined'
           >
             {tb('cancel')}
