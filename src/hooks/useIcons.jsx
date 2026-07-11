@@ -3,6 +3,7 @@ import EditDocumentIcon from '@mui/icons-material/EditDocument';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import GradeIcon from '@mui/icons-material/Grade';
 import HotelClassIcon from '@mui/icons-material/HotelClass';
+import TaskIcon from '@mui/icons-material/Task';
 import UndoIcon from '@mui/icons-material/Undo';
 
 const useIcons = () => {
@@ -15,7 +16,8 @@ const useIcons = () => {
   const buttons = {
     cancel: <UndoIcon />,
     create: <AddTaskIcon />,
-    update: <EditDocumentIcon />
+    update: <EditDocumentIcon />,
+    updateConfirm: <TaskIcon />
   };
 
   return {

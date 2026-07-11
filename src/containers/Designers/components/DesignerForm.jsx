@@ -10,27 +10,38 @@ import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { useMutation } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
 import ImageUpload from '../../../components/ImageUpload/ImageUpload';
 import useIcons from '../../../hooks/useIcons';
-import { createDesignerService } from '../../../services/designers.services';
+import { createDesignerService, updateDesignerService } from '../../../services/designers.services';
 import { setHasMessage, setIsLoading } from '../../../store/global.slice';
 import { defaultValues, getSchema } from './DesignerForm.schema';
 
-const DesignerForm = () => {
+const DesignerForm = ({ formData }) => {
   const dispatch = useDispatch();
   const { buttons: buttonIcons, designers: designerIcons } = useIcons();
   const navigate = useNavigate();
+  const { id } = useParams();
   const { t: tb } = useTranslation('buttons');
   const { t: td } = useTranslation('designers');
   const { t: tv } = useTranslation('validation');
 
   const schema = getSchema(tv);
-  const { control, formState: { errors }, handleSubmit } = useForm({ defaultValues, resolver: yupResolver(schema) });
+  const { control, formState: { errors }, handleSubmit, setValue } = useForm({ defaultValues, resolver: yupResolver(schema) });
+
+  useEffect(() => {
+    if (formData) {
+      setValue('display_name', formData?.display_name || '');
+      setValue('image_id', formData?.image_id || '');
+      setValue('name', formData?.name || '');
+      setValue('type', formData?.type || '');
+    }
+  }, [formData]);
 
   const { mutate: createDesignerMutation } = useMutation({
     mutationFn: (designerData) => {
@@ -47,8 +58,27 @@ const DesignerForm = () => {
     }
   });
 
+  const { mutate: updateDesignerMutation } = useMutation({
+    mutationFn: (designerData) => {
+      dispatch(setIsLoading(true));
+      return updateDesignerService(id, designerData);
+    },
+    onSuccess: (response) => {
+      navigate(`/designers/${response?.$id}`);
+      dispatch(setHasMessage({ hasMessage: true, message: td('designerUpdated'), messageType: 'success' }));
+    },
+    onError: (error) => {
+      dispatch(setIsLoading(false));
+      dispatch(setHasMessage({ hasMessage: true, message: error, messageType: 'error' }));
+    }
+  });
+
   const handleDesignerFormSubmit = (submittedData) => {
-    createDesignerMutation(submittedData);
+    if (id) {
+      updateDesignerMutation(submittedData);
+    } else {
+      createDesignerMutation(submittedData);
+    }
   };
 
   return (
@@ -138,10 +168,10 @@ const DesignerForm = () => {
           <Button
             onClick={handleSubmit(handleDesignerFormSubmit)}
             size='large'
-            startIcon={buttonIcons.create}
+            startIcon={id ? buttonIcons.updateConfirm : buttonIcons.create}
             variant='contained'
           >
-            {tb('create')}
+            {id ? tb('updateConfirm') : tb('create')}
           </Button>
           <Button
             size='large'

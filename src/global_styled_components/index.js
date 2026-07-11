@@ -25,7 +25,7 @@ export const StyledLabel = styled(Typography)`
 
 export const StyledValue = styled(Typography)`
     && {
-        font-weight: 500;
+        
     }
 `;
 

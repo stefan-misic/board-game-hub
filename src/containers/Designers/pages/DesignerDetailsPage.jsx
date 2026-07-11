@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
 import {
   PageContainer,
@@ -21,6 +21,7 @@ import { setIsLoading } from '../../../store/global.slice';
 const DesignerDetailsPage = () => {
   const dispatch = useDispatch();
   const { buttons: buttonIcons, designers: designerIcons } = useIcons();
+  const navigate = useNavigate();
   const { id } = useParams();
   const { t: tb } = useTranslation('buttons');
   const { t: td } = useTranslation('designers');
@@ -68,6 +69,7 @@ const DesignerDetailsPage = () => {
           </Grid>
           <Grid container>
             <Button
+              onClick={() => navigate(`/designers/${id}/update`)}
               size='large'
               startIcon={buttonIcons.update}
               variant='contained'

@@ -26,3 +26,14 @@ export const readDesignerService = async (id) => {
 
   return response;
 };
+
+export const updateDesignerService = async (id, payload) => {
+  const response = await tablesDB.updateRow({
+    databaseId: config.appwriteConfig.databaseId,
+    tableId: designersTableId,
+    rowId: id,
+    data: payload,
+  });
+
+  return response;
+};

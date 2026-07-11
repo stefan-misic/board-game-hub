@@ -1,6 +1,7 @@
 export default {
   avatar: 'Avatar',
   designerCreated: 'Designer created.',
+  designerUpdated: 'Designer updated.',
   displayName: 'Display Name',
   essential: 'Essential',
   name: 'Name',
