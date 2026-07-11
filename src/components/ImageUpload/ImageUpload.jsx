@@ -47,7 +47,7 @@ const ImageUpload = ({ alternativeText, onImageUpload }) => {
 
   return (
     <Stack alignItems='center' direction='column'>
-      <StyledAvatar alt={alternativeText} src={image} />
+      <StyledAvatar alt={alternativeText} src={image} sx={{ marginBottom: '1rem' }} />
       <Button component='label' size='small' startIcon={<CloudUploadIcon />} variant='contained'>
         {tb('upload')}
         <input

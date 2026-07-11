@@ -1,5 +1,9 @@
 import AddTaskIcon from '@mui/icons-material/AddTask';
+import AssignmentAddIcon from '@mui/icons-material/AssignmentAdd';
+import CloseIcon from '@mui/icons-material/Close';
+import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
 import EditDocumentIcon from '@mui/icons-material/EditDocument';
+import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import GradeIcon from '@mui/icons-material/Grade';
 import HotelClassIcon from '@mui/icons-material/HotelClass';
@@ -15,9 +19,13 @@ const useIcons = () => {
 
   const buttons = {
     cancel: <UndoIcon />,
-    create: <AddTaskIcon />,
+    close: <CloseIcon fontSize='small' />,
+    create: <AssignmentAddIcon />,
+    createConfirm: <AddTaskIcon />,
     update: <EditDocumentIcon />,
-    updateConfirm: <TaskIcon />
+    updateList: <EditNoteOutlinedIcon fontSize='small' />,
+    updateConfirm: <TaskIcon />,
+    view: <ContentPasteSearchIcon fontSize='small' />
   };
 
   return {

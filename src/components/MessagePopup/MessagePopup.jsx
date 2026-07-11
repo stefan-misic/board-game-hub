@@ -1,12 +1,13 @@
-import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { useDispatch, useSelector } from 'react-redux';
 
+import useIcons from '../../hooks/useIcons';
 import { selectHasMessage, selectMessage, selectMessageType, setHasMessage } from '../../store/global.slice';
 import { StyledSnackbar } from './MessagePopup.styled';
 
 const MessagePopup = () => {
   const dispatch = useDispatch();
+  const { buttons: buttonIcons } = useIcons();
   const isVisible = useSelector(selectHasMessage);
   const message = useSelector(selectMessage);
   const messageType = useSelector(selectMessageType);
@@ -28,7 +29,7 @@ const MessagePopup = () => {
           onClick={handleClose}
           size='small'
         >
-          <CloseIcon fontSize='small' />
+          {buttonIcons.close}
         </IconButton>
       }
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}

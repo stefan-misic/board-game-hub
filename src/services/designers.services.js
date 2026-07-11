@@ -27,6 +27,15 @@ export const readDesignerService = async (id) => {
   return response;
 };
 
+export const readDesignersService = async () => {
+  const response = await tablesDB.listRows({
+    databaseId: config.appwriteConfig.databaseId,
+    tableId: designersTableId
+  });
+
+  return response;
+};
+
 export const updateDesignerService = async (id, payload) => {
   const response = await tablesDB.updateRow({
     databaseId: config.appwriteConfig.databaseId,

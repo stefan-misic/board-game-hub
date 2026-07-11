@@ -32,7 +32,7 @@ const DesignerForm = ({ formData }) => {
   const { t: tv } = useTranslation('validation');
 
   const schema = getSchema(tv);
-  const { control, formState: { errors }, handleSubmit, setValue } = useForm({ defaultValues, resolver: yupResolver(schema) });
+  const { control, formState: { errors, isDirty }, handleSubmit, setValue } = useForm({ defaultValues, resolver: yupResolver(schema) });
 
   useEffect(() => {
     if (formData) {
@@ -166,14 +166,16 @@ const DesignerForm = ({ formData }) => {
         </Grid>
         <Grid container>
           <Button
+            disabled={!isDirty}
             onClick={handleSubmit(handleDesignerFormSubmit)}
             size='large'
-            startIcon={id ? buttonIcons.updateConfirm : buttonIcons.create}
+            startIcon={id ? buttonIcons.updateConfirm : buttonIcons.createConfirm}
             variant='contained'
           >
-            {id ? tb('updateConfirm') : tb('create')}
+            {id ? tb('updateConfirm') : tb('createConfirm')}
           </Button>
           <Button
+            onClick={() => id ? navigate(`/designers/${id}`) : navigate('/designers')}
             size='large'
             startIcon={buttonIcons.cancel}
             variant='outlined'

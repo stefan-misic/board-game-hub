@@ -1,7 +1,9 @@
 export default {
   cancel: 'Cancel',
-  create: 'Create',
+  create: 'New Entry',
+  createConfirm: 'Confirm New Entry',
   update: 'Update',
   updateConfirm: 'Confirm Update',
-  upload: 'Upload'
+  upload: 'Upload',
+  view: 'View'
 };

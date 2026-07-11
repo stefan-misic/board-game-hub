@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router';
 
+import config from '../../../config';
 import {
   PageContainer,
   StyledAvatar,
@@ -15,7 +16,6 @@ import {
 } from '../../../global_styled_components';
 import useIcons from '../../../hooks/useIcons';
 import { readDesignerService } from '../../../services/designers.services';
-import { previewFileService } from '../../../services/storage.services';
 import { setIsLoading } from '../../../store/global.slice';
 
 const DesignerDetailsPage = () => {
@@ -30,25 +30,21 @@ const DesignerDetailsPage = () => {
     queryKey: ['designer-details', id],
     queryFn: () => readDesignerService(id)
   });
-  const { data: designerImage, isLoading: designerImageIsLoading } = useQuery({
-    queryKey: ['designer-image', designerDetails?.image_id],
-    queryFn: () => designerDetails?.image_id ? previewFileService(designerDetails?.image_id) : ''
-  });
 
   useEffect(() => {
-    if (designerDetailsIsLoading || designerImageIsLoading) {
+    if (designerDetailsIsLoading) {
       dispatch(setIsLoading(true));
     } else {
       dispatch(setIsLoading(false));
     }
-  }, [designerDetailsIsLoading, designerImageIsLoading]);
+  }, [designerDetailsIsLoading]);
 
   return (
     <PageContainer elevation={4}>
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, sm: 12, md: 2 }}>
           <Stack alignItems='center' direction='column'>
-            <StyledAvatar alt={td('avatar')} src={designerImage} />
+            <StyledAvatar alt={td('avatar')} src={`${config.appwriteConfig.apiEndpoint}/storage/buckets/${config.appwriteConfig.bucketId}/files/${designerDetails?.image_id}/preview?project=${config.appwriteConfig.projectId}`} />
           </Stack>
         </Grid>
         <Grid container size={{ sm: 12, md: 8, lg: 6, xl: 4 }} spacing={2}>
@@ -77,6 +73,7 @@ const DesignerDetailsPage = () => {
               {tb('update')}
             </Button>
             <Button
+              onClick={() => navigate('/designers')}
               size='large'
               startIcon={buttonIcons.cancel}
               variant='outlined'
