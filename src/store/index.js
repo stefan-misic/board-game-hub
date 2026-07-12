@@ -1,18 +1,10 @@
-import { configureStore, createSlice } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 
-const appInitialState = {
-  0: 'app'
-};
-
-const appSlice = createSlice({
-  name: 'app',
-  initialState: appInitialState,
-  reducers: {}
-});
+import globalReducer from './global.slice';
 
 const store = configureStore({
   reducer: {
-    app: appSlice.reducer
+    global: globalReducer
   }
 });
 
