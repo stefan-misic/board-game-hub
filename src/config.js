@@ -3,12 +3,6 @@ const {
   VITE_APPWRITE_BUCKET_ID,
   VITE_APPWRITE_DATABASE_ID,
   VITE_APPWRITE_PROJECT_ID,
-  VITE_FIREBASE_API_KEY,
-  VITE_FIREBASE_APP_ID,
-  VITE_FIREBASE_AUTH_DOMAIN,
-  VITE_FIREBASE_MESSAGING_SENDER_ID,
-  VITE_FIREBASE_PROJECT_ID,
-  VITE_FIREBASE_STORAGE_BUCKET
 } = import.meta.env;
 
 const appwriteConfig = {
@@ -18,18 +12,8 @@ const appwriteConfig = {
   projectId: VITE_APPWRITE_PROJECT_ID
 };
 
-const firebaseConfig = {
-  appId: VITE_FIREBASE_APP_ID,
-  apiKey: VITE_FIREBASE_API_KEY,
-  authDomain: VITE_FIREBASE_AUTH_DOMAIN,
-  messagingSenderId: VITE_FIREBASE_MESSAGING_SENDER_ID,
-  projectId: VITE_FIREBASE_PROJECT_ID,
-  storageBucket: VITE_FIREBASE_STORAGE_BUCKET
-};
-
 const config = {
-  appwriteConfig,
-  firebaseConfig
+  appwriteConfig
 };
 
 export default config;
