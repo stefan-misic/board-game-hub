@@ -47,6 +47,7 @@ const DesignerDetailsPage = () => {
             <StyledAvatar alt={td('avatar')} src={`${config.appwriteConfig.apiEndpoint}/storage/buckets/${config.appwriteConfig.bucketId}/files/${designerDetails?.image_id}/preview?project=${config.appwriteConfig.projectId}`} />
           </Stack>
         </Grid>
+
         <Grid container size={{ sm: 12, md: 8, lg: 6, xl: 4 }} spacing={2}>
           <Grid size={12}>
             <StyledLabel>{td('displayName')}</StyledLabel>
@@ -63,6 +64,7 @@ const DesignerDetailsPage = () => {
               <StyledValue>{td(designerDetails?.type) || '-'}</StyledValue>
             </Stack>
           </Grid>
+          
           <Grid container>
             <Button
               onClick={() => navigate(`/designers/${id}/update`)}

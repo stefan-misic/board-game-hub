@@ -33,9 +33,16 @@ export const ListEntry = styled(Paper)`
         align-items: center;
         display: flex;
         height: 64px;
-        justify-content: space-between;
+        justify-content: ${({ $empty , theme}) => {
+    switch ($empty) {
+    case true:
+      return 'center';
+    default:
+      return 'space-between';
+    }
+  }};
         margin-bottom: 1rem;
-        overflow-y: auto;
+        overflow-x: auto;
         padding: 0.5rem;
         width: 100%;
 
@@ -131,7 +138,7 @@ export const PageContainer = styled(Paper)`
         height: 100%;
         margin: 0 auto;
         max-width: 1440px;
-        overflow-y: scroll;
+        overflow-y: auto;
         padding: 1.5rem;
         width: 100%;
     }

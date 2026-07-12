@@ -17,6 +17,16 @@ export const createDesignerService = async (payload) => {
   return response;
 };
 
+export const deleteDesignerService = async (id) => {
+  const response = await tablesDB.deleteRow({
+    databaseId: config.appwriteConfig.databaseId,
+    tableId: designersTableId,
+    rowId: id
+  });
+
+  return response;
+};
+
 export const readDesignerService = async (id) => {
   const response = await tablesDB.getRow({
     databaseId: config.appwriteConfig.databaseId,
