@@ -80,6 +80,15 @@ export const ListEntry = styled(Paper)`
     }
 `;
 
+export const PageContainer = styled(Paper)`
+    && {
+        height: 100%;
+        overflow-y: auto;
+        padding: 1.5rem;
+        width: 100%;
+    }
+`;
+
 export const StyledAvatar = styled(Avatar)`
     && {
         border: 1px solid ${({ theme }) => theme.palette.border};
@@ -130,16 +139,5 @@ export const StyledValue = styled(Typography)`
       return '1rem';
     }
   }};
-    }
-`;
-
-export const PageContainer = styled(Paper)`
-    && {
-        height: 100%;
-        margin: 0 auto;
-        max-width: 1440px;
-        overflow-y: auto;
-        padding: 1.5rem;
-        width: 100%;
     }
 `;
