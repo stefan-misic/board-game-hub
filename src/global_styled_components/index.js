@@ -42,7 +42,6 @@ export const ListEntry = styled(Paper)`
     }
   }};
         margin-bottom: 1rem;
-        overflow-x: auto;
         padding: 0.5rem;
         width: 100%;
 
@@ -66,6 +65,10 @@ export const ListEntry = styled(Paper)`
         .MuiStack-root {
             width: 150px;
 
+            @media (max-width: ${({ theme }) => theme.breakpoints.values.md}px) {
+                width: 100px;
+            }
+
             p {
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -77,6 +80,16 @@ export const ListEntry = styled(Paper)`
                 width: 0.875em;
             }
         }
+    }
+`;
+
+export const PageContainer = styled(Paper)`
+    && {
+        height: 100%;
+        overflow-x: auto;
+        overflow-y: auto;
+        padding: 1.5rem;
+        width: 100%;
     }
 `;
 
@@ -130,16 +143,5 @@ export const StyledValue = styled(Typography)`
       return '1rem';
     }
   }};
-    }
-`;
-
-export const PageContainer = styled(Paper)`
-    && {
-        height: 100%;
-        margin: 0 auto;
-        max-width: 1440px;
-        overflow-y: auto;
-        padding: 1.5rem;
-        width: 100%;
     }
 `;
