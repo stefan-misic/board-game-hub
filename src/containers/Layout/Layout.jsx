@@ -6,10 +6,14 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Stack from '@mui/material/Stack';
+import { useTheme } from '@mui/material/styles';
 import Tooltip from '@mui/material/Tooltip';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router';
 
+import Logo from '../../assets/Logo.svg';
 import { StyledAvatar } from '../../global_styled_components';
 import useIcons from '../../hooks/useIcons';
 import {
@@ -22,12 +26,17 @@ import {
 
 const Layout = ({ children }) => {
   const { buttons: buttonIcons, designers: designerIcons } = useIcons();
+  const navigate = useNavigate();
   const [isNavigationOpen, setIsNavigationOpen] = useState(true);
   const { t: tl } = useTranslation('layout');
 
+  const theme = useTheme();
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
+
   const navigationButtons = [
     {
-      icon: designerIcons.other,
+      icon: designerIcons.global,
+      link: '/designers',
       text: tl('designers')
     }
   ];
@@ -36,11 +45,14 @@ const Layout = ({ children }) => {
     <StyledLayout>
       <StyledHeader>
         <Box>
-          <Tooltip title={tl('toggleNavigation')}>
-            <IconButton onClick={() => setIsNavigationOpen(!isNavigationOpen)}>
-              {buttonIcons.menu}
-            </IconButton>
-          </Tooltip>
+          {!isTablet && (
+            <Tooltip title={tl('toggleNavigation')}>
+              <IconButton onClick={() => setIsNavigationOpen(!isNavigationOpen)}>
+                {buttonIcons.menu}
+              </IconButton>
+            </Tooltip>
+          )}
+          <img onClick={() => navigate('/designers')} src={Logo} />
         </Box>
 
         <Box>
@@ -54,28 +66,35 @@ const Layout = ({ children }) => {
 
       <StyledBody>
         <StyledDrawer
-          $isOpen={isNavigationOpen}
+          $open={isNavigationOpen}
           open={isNavigationOpen}
           variant='permanent'
         >
           <List>
             {navigationButtons.map((navButton, i) => (
               <ListItem key={i}>
-                <ListItemButton>
-                  <ListItemIcon sx={{ minWidth: 0, mr: isNavigationOpen ? 3 : 'auto', justifyContent: 'center' }}>
-                    {navButton.icon}
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={navButton.text}
-                    sx={{ opacity: isNavigationOpen ? 1 : 0 }}
-                  />
+                <ListItemButton onClick={() => navigate(navButton.link)}>
+                  {!isTablet ? (
+                    <>
+                      <ListItemIcon>
+                        {navButton.icon}
+                      </ListItemIcon>
+                      <ListItemText primary={navButton.text} />
+                    </>
+                  ) : (
+                    <Tooltip title={navButton.text}>
+                      <ListItemIcon>
+                        {navButton.icon}
+                      </ListItemIcon>
+                    </Tooltip>
+                  )}
                 </ListItemButton>
               </ListItem>
             ))}
           </List>
         </StyledDrawer>
 
-        <StyledContent $isOpen={isNavigationOpen}>
+        <StyledContent $short={isNavigationOpen}>
           {children}
         </StyledContent>
       </StyledBody>

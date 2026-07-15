@@ -17,6 +17,7 @@ import UndoIcon from '@mui/icons-material/Undo';
 const useIcons = () => {
   const designers = {
     essential: <GradeIcon sx={{ color: 'icon.orange' }} />,
+    global: <EmojiPeopleIcon />,
     other: <EmojiPeopleIcon sx={{ color: 'icon.yellow' }} />,
     top: <HotelClassIcon sx={{ color: 'icon.red' }} />
   };

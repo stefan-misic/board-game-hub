@@ -2,7 +2,9 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
+import { useTheme } from '@mui/material/styles';
 import Tooltip from '@mui/material/Tooltip';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -33,6 +35,9 @@ const DesignersListPage = () => {
   const { t: tb } = useTranslation('buttons');
   const { t: tde } = useTranslation('designers');
   const { t: tdi } = useTranslation('dialogs');
+
+  const theme = useTheme();
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
 
   const { data: designersList, isLoading: designersListIsLoading } = useQuery({
     queryKey: ['designers-list'],
@@ -86,22 +91,22 @@ const DesignersListPage = () => {
       {designersList?.rows?.map((designer) => (
         <ListEntry key={designer?.$id}>
           <Box>
-            <StyledAvatar
+            {!isTablet && (<StyledAvatar
               alt={tde('avatar')}
               $size='list'
               src={`${config.appwriteConfig.apiEndpoint}/storage/buckets/${config.appwriteConfig.bucketId}/files/${designer.image_id}/preview?project=${config.appwriteConfig.projectId}`}
-            />
+            />)}
             <Stack>
               <StyledLabel $size='list'>{tde('displayName')}</StyledLabel>
               <StyledValue $size='list'>{designer?.display_name || '-'}</StyledValue>
             </Stack>
-            <Stack>
+            {!isTablet && (<Stack>
               <StyledLabel $size='list'>{tde('type')}</StyledLabel>
               <Stack direction='row' gap={1}>
                 {designer?.type ? designerIcons[designer.type] : designerIcons.other}
                 <StyledValue $size='list'>{tde(designer?.type) || '-'}</StyledValue>
               </Stack>
-            </Stack>
+            </Stack>)}
           </Box>
 
           <Box>
