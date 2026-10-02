@@ -15,7 +15,7 @@ function App() {
         <CssBaseline />
         <Loader />
         <MessagePopup />
-        <Router />
+        <Router isUserAuthenticated={false} />
       </StyledThemeProvider>
     </MuiThemeProvider>
   );

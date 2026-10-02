@@ -86,10 +86,21 @@ export const ListEntry = styled(Paper)`
 export const PageContainer = styled(Paper)`
     && {
         height: 100%;
+        margin: 0;
         overflow-x: auto;
         overflow-y: auto;
         padding: 1.5rem;
         width: 100%;
+    }
+
+    &.authentication-page {
+        height: 525px;
+        margin: 0 auto;
+        width: 440px;
+
+        @media (max-width: ${({ theme }) => theme.breakpoints.values.md}px) {
+            width: 300px;
+        }
     }
 `;
 
