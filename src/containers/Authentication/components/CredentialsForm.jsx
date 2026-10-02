@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 
 import { setHasMessage, setIsLoading } from '../../../store/global.slice';
-import { signupUser } from '../../../store/user.slice';
+import { loginUser, signupUser } from '../../../store/user.slice';
 import { defaultValues, getSchema } from './CredentialsForm.schema';
 
 const CredentialsForm = () => {
@@ -28,7 +28,13 @@ const CredentialsForm = () => {
   const handleCredentialsFormSubmit = async (submittedData) => {
     dispatch(setIsLoading(true));
     if (location.pathname.includes('/login')) {
-      console.log('login');
+      try {
+            await dispatch(loginUser({ email: submittedData.email, password: submittedData.password })).unwrap();
+            dispatch(setHasMessage({ hasMessage: true, message: ta('successfulLoggIn'), messageType: 'success' }));
+        } catch (error) {
+            dispatch(setIsLoading(false));
+            dispatch(setHasMessage({ hasMessage: true, message: error, messageType: 'error' }));
+        }
     } else {
         try {
             await dispatch(signupUser({ email: submittedData.email, password: submittedData.password })).unwrap();

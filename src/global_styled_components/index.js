@@ -120,10 +120,6 @@ export const StyledAvatar = styled(Avatar)`
       return '100px';
     }
   }};
-
-        img {
-            object-fit: fill;
-        }
     }
 `;
 

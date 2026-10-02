@@ -94,7 +94,10 @@ const DesignersListPage = () => {
             {!isTablet && (<StyledAvatar
               alt={tde('avatar')}
               $size='list'
-              src={`${config.appwriteConfig.apiEndpoint}/storage/buckets/${config.appwriteConfig.bucketId}/files/${designer.image_id}/preview?project=${config.appwriteConfig.projectId}`}
+              src={designer.image_id ?
+                `${config.appwriteConfig.apiEndpoint}/storage/buckets/${config.appwriteConfig.bucketId}/files/${designer.image_id}/view?project=${config.appwriteConfig.projectId}`
+                : ''
+              }
             />)}
             <Stack>
               <StyledLabel $size='list'>{tde('displayName')}</StyledLabel>

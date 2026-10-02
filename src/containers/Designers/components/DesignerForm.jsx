@@ -18,6 +18,7 @@ import { useNavigate, useParams } from 'react-router';
 
 import ConfirmationDialog from '../../../components/ConfirmationDialog/ConfirmationDialog';
 import ImageUpload from '../../../components/ImageUpload/ImageUpload';
+import config from '../../../config';
 import useIcons from '../../../hooks/useIcons';
 import { createDesignerService, deleteDesignerService, updateDesignerService } from '../../../services/designers.services';
 import { setHasMessage, setIsLoading } from '../../../store/global.slice';
@@ -107,6 +108,10 @@ const DesignerForm = ({ formData }) => {
     }
   };
 
+  const initialStorageImage = formData?.image_id
+    ? `${config.appwriteConfig.apiEndpoint}/storage/buckets/${config.appwriteConfig.bucketId}/files/${formData?.image_id}/view?project=${config.appwriteConfig.projectId}`
+    : '';
+
   return (
     <Grid container spacing={2}>
       <Grid size={{ xs: 12, sm: 12, md: 2 }}>
@@ -116,6 +121,7 @@ const DesignerForm = ({ formData }) => {
           render={({ field: { onChange } }) => (
             <ImageUpload
               alternativeText={tde('avatar')}
+              initialImage={initialStorageImage}
               onImageUpload={onChange}
             />
           )}

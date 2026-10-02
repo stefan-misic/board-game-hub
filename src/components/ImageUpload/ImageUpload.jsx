@@ -10,11 +10,17 @@ import { StyledAvatar } from '../../global_styled_components';
 import { uploadFileService } from '../../services/storage.services';
 import { setHasMessage, setIsLoading } from '../../store/global.slice';
 
-const ImageUpload = ({ alternativeText, onImageUpload }) => {
+const ImageUpload = ({ alternativeText, initialImage, onImageUpload }) => {
   const dispatch = useDispatch();
-  const [image, setImage] = useState('');
+  const [image, setImage] = useState(initialImage || '');
+  const [previousInitialImage, setPreviousInitialImage] = useState(initialImage);
   const { t: tb } = useTranslation('buttons');
   const { t: tm } = useTranslation('messages');
+
+  if (initialImage !== previousInitialImage) {
+    setImage(initialImage || '');
+    setPreviousInitialImage(initialImage);
+  }
 
   const { mutate: uploadImageMutation } = useMutation({
     mutationFn: (uploadedFile) => {

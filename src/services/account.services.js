@@ -11,3 +11,12 @@ export const createUserService = async (email, password) => {
 
   return response;
 };
+
+export const loginUserService = async (email, password) => {
+  const response = await account.createEmailPasswordSession({
+    email: email,
+    password: password
+  });
+
+  return response;
+};
