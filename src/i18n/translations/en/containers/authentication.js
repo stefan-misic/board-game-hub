@@ -8,5 +8,6 @@ export default {
   signup: 'Signup',
   signupDescription: 'Please enter valid email and password.',
   successfulLoggIn: 'User logged in.',
+  successfulLoggOut: 'User logged out.',
   successfulSignUp: 'User signed up.'
 };

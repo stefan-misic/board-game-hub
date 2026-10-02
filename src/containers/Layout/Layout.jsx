@@ -5,17 +5,21 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import Stack from '@mui/material/Stack';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import { useTheme } from '@mui/material/styles';
 import Tooltip from '@mui/material/Tooltip';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 
 import Logo from '../../assets/Logo.svg';
 import { StyledAvatar } from '../../global_styled_components';
 import useIcons from '../../hooks/useIcons';
+import { setHasMessage, setIsLoading } from '../../store/global.slice';
+import { logoutUser } from '../../store/user.slice';
 import {
   StyledBody,
   StyledContent,
@@ -25,13 +29,38 @@ import {
 } from './Layout.styled';
 
 const Layout = ({ children }) => {
+  const dispatch = useDispatch();
   const { buttons: buttonIcons, designers: designerIcons } = useIcons();
   const navigate = useNavigate();
   const [isNavigationOpen, setIsNavigationOpen] = useState(true);
+  const [userMenuAnchorEl, setUserMenuAnchorEl] = useState(null);
+  const { t: ta } = useTranslation('authentication');
   const { t: tl } = useTranslation('layout');
 
   const theme = useTheme();
   const isTablet = useMediaQuery(theme.breakpoints.down('md'));
+
+  const handleLogoutButtonClick = async () => {
+    setUserMenuAnchorEl(null);
+    dispatch(setIsLoading(true));
+    try {
+      await dispatch(logoutUser()).unwrap();
+      dispatch(setHasMessage({ hasMessage: true, message: ta('successfulLoggOut'), messageType: 'success' }));
+    } catch (error) {
+      dispatch(setHasMessage({ hasMessage: true, message: error, messageType: 'error' }));
+    }
+    dispatch(setIsLoading(false));
+  };
+  
+  const handleUserMenuClick = (event) => {
+    setUserMenuAnchorEl(event.currentTarget);
+  };
+
+  const handleUserMenuClose = () => {
+    setUserMenuAnchorEl(null);
+  };
+
+  const isUserMenuOpen = Boolean(userMenuAnchorEl);
 
   const navigationButtons = [
     {
@@ -56,11 +85,27 @@ const Layout = ({ children }) => {
         </Box>
 
         <Box>
-          <StyledAvatar
-            alt={''}
-            $size='list'
-            src={''}
-          />
+          <Tooltip title={tl('userMenu')}>
+            <IconButton onClick={handleUserMenuClick}>
+              <StyledAvatar
+                alt={''}
+                $size='list'
+                src={''}
+              />
+            </IconButton>
+          </Tooltip>
+          <Menu
+            anchorEl={userMenuAnchorEl}
+            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            onClick={handleUserMenuClose}
+            onClose={handleUserMenuClose}
+            open={isUserMenuOpen}
+            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+          >
+            <MenuItem dense onClick={handleLogoutButtonClick}>
+              {tl('logout')}
+            </MenuItem>
+          </Menu>
         </Box>
       </StyledHeader>
 

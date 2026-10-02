@@ -20,3 +20,9 @@ export const loginUserService = async (email, password) => {
 
   return response;
 };
+
+export const logoutUserService = async () => {
+  const response = await account.deleteSession({ sessionId: 'current' });
+
+  return response;
+};

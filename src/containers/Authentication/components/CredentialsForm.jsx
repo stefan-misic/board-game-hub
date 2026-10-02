@@ -29,22 +29,22 @@ const CredentialsForm = () => {
     dispatch(setIsLoading(true));
     if (location.pathname.includes('/login')) {
       try {
-            await dispatch(loginUser({ email: submittedData.email, password: submittedData.password })).unwrap();
-            dispatch(setHasMessage({ hasMessage: true, message: ta('successfulLoggIn'), messageType: 'success' }));
-        } catch (error) {
-            dispatch(setIsLoading(false));
-            dispatch(setHasMessage({ hasMessage: true, message: error, messageType: 'error' }));
-        }
+        await dispatch(loginUser({ email: submittedData.email, password: submittedData.password })).unwrap();
+        dispatch(setHasMessage({ hasMessage: true, message: ta('successfulLoggIn'), messageType: 'success' }));
+      } catch (error) {
+        dispatch(setIsLoading(false));
+        dispatch(setHasMessage({ hasMessage: true, message: error, messageType: 'error' }));
+      }
     } else {
-        try {
-            await dispatch(signupUser({ email: submittedData.email, password: submittedData.password })).unwrap();
-            navigate('/login');
-            dispatch(setIsLoading(false));
-            dispatch(setHasMessage({ hasMessage: true, message: ta('successfulSignUp'), messageType: 'success' }));
-        } catch (error) {
-            dispatch(setIsLoading(false));
-            dispatch(setHasMessage({ hasMessage: true, message: error, messageType: 'error' }));
-        }
+      try {
+        await dispatch(signupUser({ email: submittedData.email, password: submittedData.password })).unwrap();
+        navigate('/login');
+        dispatch(setIsLoading(false));
+        dispatch(setHasMessage({ hasMessage: true, message: ta('successfulSignUp'), messageType: 'success' }));
+      } catch (error) {
+        dispatch(setIsLoading(false));
+        dispatch(setHasMessage({ hasMessage: true, message: error, messageType: 'error' }));
+      }
     }
   };
 
