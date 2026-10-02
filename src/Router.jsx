@@ -6,7 +6,6 @@ import {
 } from 'react-router';
 
 import AuthenticationRoutes from './containers/Authentication/AuthenticationRoutes';
-import LoginPage from './containers/Authentication/pages/LoginPage';
 import DesignersRoutes from './containers/Designers/DesignersRoutes';
 import AuthenticationLayout from './containers/Layout/AuthenticationLayout';
 import Layout from './containers/Layout/Layout';

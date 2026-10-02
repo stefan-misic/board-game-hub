@@ -5,6 +5,7 @@ export const StyledAuthentication = styled(Box)`
     align-items: center;
     display: flex;
     flex-direction: column;
+    text-align: center;
 
     img {
         height: 80px;

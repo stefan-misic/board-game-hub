@@ -94,13 +94,10 @@ export const PageContainer = styled(Paper)`
     }
 
     &.authentication-page {
-        height: 525px;
+        height: auto;
+        min-height: 525px;
         margin: 0 auto;
-        width: 440px;
-
-        @media (max-width: ${({ theme }) => theme.breakpoints.values.md}px) {
-            width: 300px;
-        }
+        max-width: 440px;
     }
 `;
 

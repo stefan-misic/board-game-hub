@@ -4,7 +4,6 @@ import CredentialsForm from '../components/CredentialsForm';
 import { StyledAuthentication } from '../Authentication.styled';
 
 const SignupPage = () => {
-
   return (
     <PageContainer className='authentication-page' elevation={4}>
       <StyledAuthentication>

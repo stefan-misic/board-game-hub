@@ -2,13 +2,13 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useMutation } from '@tanstack/react-query';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
-import { createUserService } from '../../../services/account.services';
+
 import { setHasMessage, setIsLoading } from '../../../store/global.slice';
+import { signupUser } from '../../../store/user.slice';
 import { defaultValues, getSchema } from './CredentialsForm.schema';
 
 const CredentialsForm = () => {
@@ -25,26 +25,20 @@ const CredentialsForm = () => {
     handleSubmit
   } = useForm({ defaultValues, resolver: yupResolver(schema) });
 
-  const { mutate: createUserMutation } = useMutation({
-    mutationFn: (userData) => {
-      dispatch(setIsLoading(true));
-      return createUserService(userData.email, userData.password);
-    },
-    onSuccess: (response) => {
-      navigate('/designers');
-      dispatch(setHasMessage({ hasMessage: true, message: ta('successfulSignUp'), messageType: 'success' }));
-    },
-    onError: (error) => {
-      dispatch(setIsLoading(false));
-      dispatch(setHasMessage({ hasMessage: true, message: error, messageType: 'error' }));
-    }
-  });
-
-  const handleCredentialsFormSubmit = (submittedData) => {
+  const handleCredentialsFormSubmit = async (submittedData) => {
+    dispatch(setIsLoading(true));
     if (location.pathname.includes('/login')) {
       console.log('login');
     } else {
-      createUserMutation(submittedData);
+        try {
+            await dispatch(signupUser({ email: submittedData.email, password: submittedData.password })).unwrap();
+            navigate('/login');
+            dispatch(setIsLoading(false));
+            dispatch(setHasMessage({ hasMessage: true, message: ta('successfulSignUp'), messageType: 'success' }));
+        } catch (error) {
+            dispatch(setIsLoading(false));
+            dispatch(setHasMessage({ hasMessage: true, message: error, messageType: 'error' }));
+        }
     }
   };
 
