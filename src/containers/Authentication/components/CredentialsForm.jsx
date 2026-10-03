@@ -93,7 +93,7 @@ const CredentialsForm = () => {
       {location.pathname.includes('/login') ? (
         <>
           <Button
-            onClick={() => console.log('resetPassword')}
+            onClick={() => navigate('/password-recovery')}
             size='large'
             variant='text'
           >

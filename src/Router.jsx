@@ -24,10 +24,9 @@ const Router = ({ isUserAuthenticated }) => {
           <Routes>
             {routes?.map((route, i) => (
               <Route
-                {...route?.element && { element: route.element }}
-                exact
+                element={route.element}
                 key={i}
-                {...route?.path && { path: route.path }}
+                path={route.path}
               />
             ))}
 
@@ -39,10 +38,9 @@ const Router = ({ isUserAuthenticated }) => {
           <Routes>
             {routes?.map((route, i) => (
               <Route
-                {...route?.element && { element: route.element }}
-                exact
+                element={route.element}
                 key={i}
-                {...route?.path && { path: route.path }}
+                path={route.path}
               />
             ))}
 

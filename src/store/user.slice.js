@@ -1,6 +1,25 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { createUserService, loginUserService, logoutUserService } from '../services/account.services';
+import {
+  changeUserPasswordService,
+  createUserService,
+  loginUserService,
+  logoutUserService,
+  recoverUserPasswordService
+} from '../services/account.services';
+
+export const changeUserPassword = createAsyncThunk(
+  'user/changeUserPassword',
+  async ({ id, password, secretKey }, { rejectWithValue }) => {
+    try {
+      const response = await changeUserPasswordService(id, password, secretKey);
+
+      return response;
+    } catch (error){
+      return rejectWithValue(error?.message);
+    }
+  }
+);
 
 export const loginUser = createAsyncThunk(
   'user/loginUser',
@@ -39,6 +58,19 @@ export const signupUser = createAsyncThunk(
   async ({ email, password }, { rejectWithValue }) => {
     try {
       const response = await createUserService(email, password);
+
+      return response;
+    } catch (error){
+      return rejectWithValue(error?.message);
+    }
+  }
+);
+
+export const recoverUserPassword = createAsyncThunk(
+  'user/recoverUserPassword',
+  async ({ email }, { rejectWithValue }) => {
+    try {
+      const response = await recoverUserPasswordService(email);
 
       return response;
     } catch (error){
