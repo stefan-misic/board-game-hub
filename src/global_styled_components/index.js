@@ -86,10 +86,18 @@ export const ListEntry = styled(Paper)`
 export const PageContainer = styled(Paper)`
     && {
         height: 100%;
+        margin: 0;
         overflow-x: auto;
         overflow-y: auto;
         padding: 1.5rem;
         width: 100%;
+    }
+
+    &.authentication-page {
+        height: auto;
+        min-height: 525px;
+        margin: 0 auto;
+        max-width: 440px;
     }
 `;
 
@@ -112,10 +120,6 @@ export const StyledAvatar = styled(Avatar)`
       return '100px';
     }
   }};
-
-        img {
-            object-fit: fill;
-        }
     }
 `;
 

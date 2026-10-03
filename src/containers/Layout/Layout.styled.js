@@ -137,7 +137,17 @@ export const StyledHeader = styled(Paper)`
 
 export const StyledLayout = styled(Box)`
     background-color: ${({ theme }) => theme.palette.background.main};
+    display: ${({ $type , theme}) => {
+    switch ($type) {
+    case 'authentication':
+      return 'flex';
+    default:
+      return 'block';
+    }
+  }};
+    flex-direction: column;
     height: 100%;
+    justify-content: center;
     padding: 1.5rem;
     width: 100%;
 `;

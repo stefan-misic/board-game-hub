@@ -1,4 +1,6 @@
 export default {
   designers: 'Designers',
-  toggleNavigation: 'Toggle Navigation'
+  logout: 'Logout',
+  toggleNavigation: 'Toggle Navigation',
+  userMenu: 'User Menu'
 };

@@ -44,7 +44,13 @@ const DesignerDetailsPage = () => {
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, sm: 12, md: 2 }}>
           <Stack alignItems='center' direction='column'>
-            <StyledAvatar alt={td('avatar')} src={`${config.appwriteConfig.apiEndpoint}/storage/buckets/${config.appwriteConfig.bucketId}/files/${designerDetails?.image_id}/preview?project=${config.appwriteConfig.projectId}`} />
+            <StyledAvatar
+              alt={td('avatar')}
+              src={designerDetails?.image_id ?
+                `${config.appwriteConfig.apiEndpoint}/storage/buckets/${config.appwriteConfig.bucketId}/files/${designerDetails?.image_id}/view?project=${config.appwriteConfig.projectId}`
+                : ''
+              }
+            />
           </Stack>
         </Grid>
 

@@ -1,3 +1,4 @@
+import translationAuthentication from './containers/authentication';
 import translationDesigners from './containers/designers';
 import translationLayout from './containers/layout';
 
@@ -7,6 +8,7 @@ import translationMessages from './global/messages';
 import translationValidation from './global/validation';
 
 export default {
+  authentication: translationAuthentication,
   designers: translationDesigners,
   layout: translationLayout,
 
