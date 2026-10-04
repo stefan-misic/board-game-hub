@@ -5,6 +5,7 @@ import {
   createUserService,
   loginUserService,
   logoutUserService,
+  readUserService,
   recoverUserPasswordService
 } from '../services/account.services';
 
@@ -25,10 +26,13 @@ export const loginUser = createAsyncThunk(
   'user/loginUser',
   async ({ email, password }, { rejectWithValue }) => {
     try {
-      const response = await loginUserService(email, password);
+      const loginResponse = await loginUserService(email, password);
+      const userResponse = await readUserService();
+
       const userData = {
-        email: response?.providerUid,
-        id: response?.userId
+        email: loginResponse?.providerUid,
+        id: loginResponse?.userId,
+        permissions: userResponse?.labels
       };
       localStorage.setItem('currentUser', JSON.stringify(userData));
       
@@ -107,5 +111,7 @@ const userSlice = createSlice({
 });
 
 export const selectCurrentUser = (state) => state.user.currentUser;
+export const selectCurrentUserPermissions = (state) => state.user.currentUser?.permissions;
+export const selectIsCurrentUserAdmin = (state) => state.user.currentUser?.permissions?.includes('admin');
 
 export default userSlice.reducer;

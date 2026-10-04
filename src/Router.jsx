@@ -6,6 +6,7 @@ import {
 } from 'react-router';
 
 import AuthenticationRoutes from './containers/Authentication/AuthenticationRoutes';
+import UnauthorizedPage from './containers/Authorization/pages/UnauthorizedPage';
 import DesignersRoutes from './containers/Designers/DesignersRoutes';
 import AuthenticationLayout from './containers/Layout/AuthenticationLayout';
 import Layout from './containers/Layout/Layout';
@@ -30,6 +31,7 @@ const Router = ({ isUserAuthenticated }) => {
               />
             ))}
 
+            <Route element={<UnauthorizedPage />} path='/unauthorized' />
             <Route element={<Navigate to='/designers' />} path='*' />
           </Routes>
         </Layout>

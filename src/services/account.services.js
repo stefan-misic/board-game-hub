@@ -38,6 +38,12 @@ export const logoutUserService = async () => {
   return response;
 };
 
+export const readUserService = async () => {
+  const response = await account.get();
+
+  return response;
+};
+
 export const recoverUserPasswordService = async (email) => {
   const response = await account.createRecovery({
     email,

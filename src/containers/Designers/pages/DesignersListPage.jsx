@@ -8,7 +8,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 
 import ConfirmationDialog from '../../../components/ConfirmationDialog/ConfirmationDialog';
@@ -24,12 +24,14 @@ import {
 import useIcons from '../../../hooks/useIcons';
 import { deleteDesignerService, readDesignersService } from '../../../services/designers.services';
 import { setHasMessage, setIsLoading } from '../../../store/global.slice';
+import { selectIsCurrentUserAdmin } from '../../../store/user.slice';
 
 const DesignersListPage = () => {
   const dispatch = useDispatch();
   const { buttons: buttonIcons, designers: designerIcons } = useIcons();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const isCurrentUserAdmin = useSelector(selectIsCurrentUserAdmin);
   const [isDeletionDialogOpen, setIsDeletionDialogOpen] = useState(false);
   const [interactedEntry, setInteractedEntry] = useState(null);
   const { t: tb } = useTranslation('buttons');
@@ -78,13 +80,15 @@ const DesignersListPage = () => {
         <Box></Box>
 
         <Box>
-          <Button
-            onClick={() => navigate('/designers/create')}
-            startIcon={buttonIcons.create}
-            variant='contained'
-          >
-            {tb('create')}
-          </Button>
+          {isCurrentUserAdmin && (
+            <Button
+              onClick={() => navigate('/designers/create')}
+              startIcon={buttonIcons.create}
+              variant='contained'
+            >
+              {tb('create')}
+            </Button>
+          )}
         </Box>
       </ListHeader>
 
@@ -122,27 +126,31 @@ const DesignersListPage = () => {
                 {buttonIcons.view}
               </IconButton>
             </Tooltip>
-            <Tooltip title={tb('update')}>
-              <IconButton
-                color='primary'
-                onClick={() => navigate(`/designers/${designer?.$id}/update`)}
-                size='small'
-              >
-                {buttonIcons.updateList}
-              </IconButton>
-            </Tooltip>
-            <Tooltip title={tb('delete')}>
-              <IconButton
-                color='error'
-                onClick={() => {
-                  setInteractedEntry(designer);
-                  setIsDeletionDialogOpen(true);
-                }}
-                size='small'
-              >
-                {buttonIcons.deleteList}
-              </IconButton>
-            </Tooltip>
+            {isCurrentUserAdmin && (
+              <>
+                <Tooltip title={tb('update')}>
+                  <IconButton
+                    color='primary'
+                    onClick={() => navigate(`/designers/${designer?.$id}/update`)}
+                    size='small'
+                  >
+                    {buttonIcons.updateList}
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title={tb('delete')}>
+                  <IconButton
+                    color='error'
+                    onClick={() => {
+                      setInteractedEntry(designer);
+                      setIsDeletionDialogOpen(true);
+                    }}
+                    size='small'
+                  >
+                    {buttonIcons.deleteList}
+                  </IconButton>
+                </Tooltip>
+              </>
+            )}
           </Box>
         </ListEntry>
       ))}
