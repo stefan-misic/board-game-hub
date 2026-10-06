@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router';
 
 import config from '../../../config';
@@ -17,12 +17,14 @@ import {
 import useIcons from '../../../hooks/useIcons';
 import { readDesignerService } from '../../../services/designers.services';
 import { setIsLoading } from '../../../store/global.slice';
+import { selectIsCurrentUserAdmin } from '../../../store/user.slice';
 
 const DesignerDetailsPage = () => {
   const dispatch = useDispatch();
   const { buttons: buttonIcons, designers: designerIcons } = useIcons();
   const navigate = useNavigate();
   const { id } = useParams();
+  const isCurrentUserAdmin = useSelector(selectIsCurrentUserAdmin);
   const { t: tb } = useTranslation('buttons');
   const { t: td } = useTranslation('designers');
 
@@ -72,14 +74,16 @@ const DesignerDetailsPage = () => {
           </Grid>
           
           <Grid container>
-            <Button
-              onClick={() => navigate(`/designers/${id}/update`)}
-              size='large'
-              startIcon={buttonIcons.update}
-              variant='contained'
-            >
-              {tb('update')}
-            </Button>
+            {isCurrentUserAdmin && (
+              <Button
+                onClick={() => navigate(`/designers/${id}/update`)}
+                size='large'
+                startIcon={buttonIcons.update}
+                variant='contained'
+              >
+                {tb('update')}
+              </Button>
+            )}
             <Button
               onClick={() => navigate('/designers')}
               size='large'
