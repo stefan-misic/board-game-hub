@@ -3,9 +3,9 @@ import { createRoot } from 'react-dom/client';
 import { I18nextProvider } from 'react-i18next';
 import { Provider } from 'react-redux';
 
-import App from './App.jsx';
-import i18n from './i18n';
-import store from './store';
+import App from './App.js';
+import i18n from './i18n/index.js';
+import store from './store/index.js';
 
 const root = createRoot(document.getElementById('root'));
 const queryClient = new QueryClient();
