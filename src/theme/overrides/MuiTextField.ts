@@ -1,4 +1,6 @@
-const MuiTextField = {
+import { Components } from '@mui/material/styles';
+
+const MuiTextField: Components['MuiTextField'] = {
   styleOverrides: {
     root: {
       width: '100%'

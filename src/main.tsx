@@ -3,11 +3,15 @@ import { createRoot } from 'react-dom/client';
 import { I18nextProvider } from 'react-i18next';
 import { Provider } from 'react-redux';
 
-import App from './App.js';
-import i18n from './i18n/index.js';
-import store from './store/index.js';
+import App from './App';
+import i18n from './i18n';
+import store from './store';
 
-const root = createRoot(document.getElementById('root'));
+const rootContainer = document.getElementById('root');
+if (!rootContainer) {
+  throw new Error("Failed to find the root element. Make sure it exists in index.html");
+}
+const root = createRoot(rootContainer);
 const queryClient = new QueryClient();
 
 root.render(

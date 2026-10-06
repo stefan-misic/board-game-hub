@@ -1,4 +1,6 @@
-const breakpoints = {
+import { BreakpointsOptions } from '@mui/material/styles';
+
+const breakpoints: BreakpointsOptions = {
   values: {
     xs: 0,
     sm: 600,

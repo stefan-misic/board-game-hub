@@ -1,9 +1,10 @@
+import { RouteConfig } from '../../types/router.types';
 import LoginPage from './pages/LoginPage';
 import NewPasswordPage from './pages/NewPasswordPage';
 import PasswordRecoveryPage from './pages/PasswordRecoveryPage';
 import SignupPage from './pages/SignupPage';
 
-const AuthenticationRoutes = [
+const AuthenticationRoutes: RouteConfig[] = [
   { path: '/signup', element: <SignupPage /> },
   { path: '/login', element: <LoginPage /> },
   { path: '/password-recovery', element: <PasswordRecoveryPage /> },
