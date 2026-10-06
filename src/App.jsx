@@ -1,35 +1,28 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { CssBaseline } from '@mui/material';
+import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
+import { useSelector } from 'react-redux';
+import { ThemeProvider as StyledThemeProvider } from 'styled-components';
+
+import Loader from './components/Loader/Loader';
+import MessagePopup from './components/MessagePopup/MessagePopup';
+import { selectCurrentUser } from './store/user.slice';
+import Router from './Router';
+import theme from './theme';
+import './App.scss';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const currentUser = useSelector(selectCurrentUser);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit(ed) <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <MuiThemeProvider theme={theme}>
+      <StyledThemeProvider theme={theme}>
+        <CssBaseline />
+        <Loader />
+        <MessagePopup />
+        <Router isUserAuthenticated={!!currentUser?.id} />
+      </StyledThemeProvider>
+    </MuiThemeProvider>
+  );
 }
 
-export default App
+export default App;
