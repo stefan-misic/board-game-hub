@@ -5,9 +5,9 @@ import UpdateDesignerPage from './pages/UpdateDesignerPage';
 
 const DesignersRoutes = [
   { path: '/designers', element: <DesignersListPage /> },
-  { path: '/designers/create', element: <CreateDesignerPage /> },
+  { path: '/designers/create', permissions: ['admin'], element: <CreateDesignerPage />, },
   { path: '/designers/:id', element: <DesignerDetailsPage /> },
-  { path: '/designers/:id/update', element: <UpdateDesignerPage /> }
+  { path: '/designers/:id/update', permissions: ['admin'], element: <UpdateDesignerPage /> }
 ];
 
 export default DesignersRoutes;
