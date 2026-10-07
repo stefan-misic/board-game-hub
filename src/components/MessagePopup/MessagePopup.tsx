@@ -1,18 +1,20 @@
 import IconButton from '@mui/material/IconButton';
+import { SyntheticEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import useIcons from '../../hooks/useIcons';
+import { StoreState } from '../../store';
 import { selectHasMessage, selectMessage, selectMessageType, setHasMessage } from '../../store/global.slice';
 import { StyledSnackbar } from './MessagePopup.styled';
 
 const MessagePopup = () => {
   const dispatch = useDispatch();
   const { buttons: buttonIcons } = useIcons();
-  const isVisible = useSelector(selectHasMessage);
-  const message = useSelector(selectMessage);
-  const messageType = useSelector(selectMessageType);
+  const isVisible = useSelector<StoreState, boolean>(selectHasMessage);
+  const message = useSelector<StoreState, string>(selectMessage);
+  const messageType = useSelector<StoreState, string>(selectMessageType);
 
-  const handleClose = (event, reason) => {
+  const handleClose = (_: SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }

@@ -12,7 +12,7 @@ interface DesignerPayload {
   name: string;
   type: string;
 }
-type DesignerRow = Models.Row & DesignerPayload;
+export type DesignerRow = Models.Row & DesignerPayload;
 export const createDesignerService = async (payload: DesignerPayload): Promise<DesignerRow> => {
   const response = await tablesDB.createRow<DesignerRow>({
     databaseId: config.appwriteConfig.databaseId,

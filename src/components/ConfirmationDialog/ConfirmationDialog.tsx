@@ -4,17 +4,25 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
+import { Dispatch, ReactNode, SetStateAction } from 'react'; 
 import { useTranslation } from 'react-i18next';
 
 import useIcons from '../../hooks/useIcons';
 
+interface ConfirmationDialogProps {
+  confirmationButton: ReactNode;
+  dialogContent: string;
+  dialogTitle: string;
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+}
 const ConfirmationDialog = ({
   confirmationButton,
   dialogContent,
   dialogTitle,
   isOpen,
   setIsOpen
-}) => {
+}: ConfirmationDialogProps) => {
   const { buttons: buttonIcons } = useIcons();
   const { t: tb } = useTranslation('buttons');
 

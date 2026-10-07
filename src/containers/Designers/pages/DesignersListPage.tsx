@@ -21,8 +21,8 @@ import {
   StyledLabel,
   StyledValue
 } from '../../../global_styled_components';
-import useIcons from '../../../hooks/useIcons';
-import { deleteDesignerService, readDesignersService } from '../../../services/designers.services';
+import useIcons, { DesignerIcons } from '../../../hooks/useIcons';
+import { deleteDesignerService, DesignerRow, readDesignersService } from '../../../services/designers.services';
 import { setHasMessage, setIsLoading } from '../../../store/global.slice';
 import { selectIsCurrentUserAdmin } from '../../../store/user.slice';
 
@@ -32,8 +32,8 @@ const DesignersListPage = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const isCurrentUserAdmin = useSelector(selectIsCurrentUserAdmin);
-  const [isDeletionDialogOpen, setIsDeletionDialogOpen] = useState(false);
-  const [interactedEntry, setInteractedEntry] = useState(null);
+  const [isDeletionDialogOpen, setIsDeletionDialogOpen] = useState<boolean>(false);
+  const [interactedEntry, setInteractedEntry] = useState<DesignerRow | null>(null);
   const { t: tb } = useTranslation('buttons');
   const { t: tde } = useTranslation('designers');
   const { t: tdi } = useTranslation('dialogs');
@@ -52,14 +52,18 @@ const DesignersListPage = () => {
     } else {
       dispatch(setIsLoading(false));
     }
-  }, [designersListIsLoading]);
+  }, [designersListIsLoading, dispatch]);
 
   const { mutate: deleteDesignerMutation } = useMutation({
     mutationFn: () => {
+      if (!interactedEntry?.$id) {
+        throw new Error('No entry selected');
+      }
+
       dispatch(setIsLoading(true));
       return deleteDesignerService(interactedEntry?.$id);
     },
-    onSuccess: (response) => {
+    onSuccess: () => {
       setIsDeletionDialogOpen(false);
       queryClient.invalidateQueries({ queryKey: ['designers-list'] });
       dispatch(setIsLoading(false));
@@ -69,7 +73,8 @@ const DesignersListPage = () => {
     onError: (error) => {
       setIsDeletionDialogOpen(false);
       dispatch(setIsLoading(false));
-      dispatch(setHasMessage({ hasMessage: true, message: error, messageType: 'error' }));
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      dispatch(setHasMessage({ hasMessage: true, message: errorMessage, messageType: 'error' }));
       setInteractedEntry(null);
     }
   });
@@ -110,7 +115,7 @@ const DesignersListPage = () => {
             {!isTablet && (<Stack>
               <StyledLabel $size='list'>{tde('type')}</StyledLabel>
               <Stack direction='row' gap={1}>
-                {designer?.type ? designerIcons[designer.type] : designerIcons.other}
+                {designer.type && designer.type in designerIcons ? designerIcons[designer.type as keyof DesignerIcons] : designerIcons.other}
                 <StyledValue $size='list'>{tde(designer?.type) || '-'}</StyledValue>
               </Stack>
             </Stack>)}
@@ -163,7 +168,7 @@ const DesignersListPage = () => {
         confirmationButton={
           <Button
             color='error'
-            onClick={deleteDesignerMutation}
+            onClick={() => deleteDesignerMutation()} 
             startIcon={buttonIcons.deleteConfirm}
             variant='contained'
           >

@@ -15,37 +15,41 @@ import TaskIcon from '@mui/icons-material/Task';
 import UndoIcon from '@mui/icons-material/Undo';
 import { ReactElement } from 'react';
 
+export interface ButtonIcons {
+  cancel: ReactElement;
+  close: ReactElement;
+  create: ReactElement;
+  createConfirm: ReactElement;
+  delete: ReactElement;
+  deleteConfirm: ReactElement;
+  deleteList: ReactElement;
+  menu: ReactElement;
+  update: ReactElement;
+  updateList: ReactElement;
+  updateConfirm: ReactElement;
+  view: ReactElement;
+}
+
+export interface DesignerIcons {
+  essential: ReactElement;
+  global: ReactElement;
+  other: ReactElement;
+  top: ReactElement;
+}
+
 interface UseIcons {
-  designers: {
-    essential: ReactElement;
-    global: ReactElement;
-    other: ReactElement;
-    top: ReactElement;
-  };
-  buttons: {
-    cancel: ReactElement;
-    close: ReactElement;
-    create: ReactElement;
-    createConfirm: ReactElement;
-    delete: ReactElement;
-    deleteConfirm: ReactElement;
-    deleteList: ReactElement;
-    menu: ReactElement;
-    update: ReactElement;
-    updateList: ReactElement;
-    updateConfirm: ReactElement;
-    view: ReactElement;
-  };
+  designers: DesignerIcons;
+  buttons: ButtonIcons;
 }
 const useIcons = (): UseIcons => {
-  const designers = {
+  const designers: DesignerIcons = {
     essential: <GradeIcon sx={{ color: 'icon.orange' }} />,
     global: <EmojiPeopleIcon />,
     other: <EmojiPeopleIcon sx={{ color: 'icon.yellow' }} />,
     top: <HotelClassIcon sx={{ color: 'icon.red' }} />
   };
 
-  const buttons = {
+  const buttons: ButtonIcons = {
     cancel: <UndoIcon />,
     close: <CloseIcon fontSize='small' />,
     create: <AssignmentAddIcon />,

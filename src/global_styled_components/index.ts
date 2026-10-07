@@ -1,6 +1,7 @@
 import Avatar from '@mui/material/Avatar';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
+import { Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import styled from 'styled-components';
 
@@ -73,7 +74,7 @@ export const ListEntry = styled(Paper)<ListEntryProps>`
         .MuiStack-root {
             width: 150px;
 
-            @media (max-width: ${({ theme }) => theme.breakpoints.values.md}px) {
+            @media (max-width: ${(props) => (props.theme as Theme).breakpoints.values.md}px) {
                 width: 100px;
             }
 
@@ -111,7 +112,7 @@ export const PageContainer = styled(Paper)`
 
 export const StyledAvatar = styled(Avatar)<SizeProps>`
     && {
-        border: 1px solid ${({ theme }) => theme.palette.border};
+        border: 1px solid ${(props) => (props.theme as Theme).palette.border};
         height: ${({ $size }) => {
     switch ($size) {
     case 'list':
@@ -133,7 +134,7 @@ export const StyledAvatar = styled(Avatar)<SizeProps>`
 
 export const StyledLabel = styled(Typography)<SizeProps>`
     && {
-        color: ${({ theme }) => theme.palette.text.label};
+        color: ${(props) => (props.theme as Theme).palette.text.label};
         font-size: ${({ $size }) => {
     switch ($size) {
     case 'list':

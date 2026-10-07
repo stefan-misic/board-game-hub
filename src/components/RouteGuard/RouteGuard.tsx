@@ -1,10 +1,14 @@
 import { useSelector } from 'react-redux';
 import { Navigate, Outlet } from 'react-router';
 
+import { StoreState } from '../../store';
 import { selectCurrentUserPermissions } from '../../store/user.slice';
 
-const RouteGuard = ({ requiredPermissions }) => {
-  const currentUserPermissions = useSelector(selectCurrentUserPermissions);
+interface RouteGuardProps {
+  requiredPermissions: string[];
+}
+const RouteGuard = ({ requiredPermissions }: RouteGuardProps) => {
+  const currentUserPermissions = useSelector<StoreState, string[] | null | undefined>(selectCurrentUserPermissions);
 
   if (requiredPermissions?.length > 0) {
     const hasRequiredPermissions = requiredPermissions.some((permission) =>
