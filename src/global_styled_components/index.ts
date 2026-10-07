@@ -4,6 +4,14 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import styled from 'styled-components';
 
+interface ListEntryProps {
+  $empty?: boolean;
+}
+
+interface SizeProps {
+  $size?: 'list' | 'default';
+}
+
 export const ListHeader = styled(Stack)`
     && {
         align-items: center;
@@ -28,12 +36,12 @@ export const ListHeader = styled(Stack)`
     }
 `;
 
-export const ListEntry = styled(Paper)`
+export const ListEntry = styled(Paper)<ListEntryProps>`
     && {
         align-items: center;
         display: flex;
         height: 64px;
-        justify-content: ${({ $empty , theme}) => {
+        justify-content: ${({ $empty }) => {
     switch ($empty) {
     case true:
       return 'center';
@@ -101,10 +109,10 @@ export const PageContainer = styled(Paper)`
     }
 `;
 
-export const StyledAvatar = styled(Avatar)`
+export const StyledAvatar = styled(Avatar)<SizeProps>`
     && {
         border: 1px solid ${({ theme }) => theme.palette.border};
-        height: ${({ $size , theme}) => {
+        height: ${({ $size }) => {
     switch ($size) {
     case 'list':
       return '32px';
@@ -112,7 +120,7 @@ export const StyledAvatar = styled(Avatar)`
       return '100px';
     }
   }};
-        width: ${({ $size , theme}) => {
+        width: ${({ $size }) => {
     switch ($size) {
     case 'list':
       return '32px';
@@ -123,10 +131,10 @@ export const StyledAvatar = styled(Avatar)`
     }
 `;
 
-export const StyledLabel = styled(Typography)`
+export const StyledLabel = styled(Typography)<SizeProps>`
     && {
         color: ${({ theme }) => theme.palette.text.label};
-        font-size: ${({ $size , theme}) => {
+        font-size: ${({ $size }) => {
     switch ($size) {
     case 'list':
       return '0.625rem';
@@ -137,9 +145,9 @@ export const StyledLabel = styled(Typography)`
     }
 `;
 
-export const StyledValue = styled(Typography)`
+export const StyledValue = styled(Typography)<SizeProps>`
     && {
-        font-size: ${({ $size , theme}) => {
+        font-size: ${({ $size }) => {
     switch ($size) {
     case 'list':
       return '0.875rem';

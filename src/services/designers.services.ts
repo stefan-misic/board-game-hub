@@ -1,4 +1,4 @@
-import { Query } from 'appwrite';
+import type { Models } from 'appwrite';
 import { v4 as uuid } from 'uuid';
 
 import config from '../config';
@@ -6,8 +6,15 @@ import { tablesDB } from '../lib/appwrite';
 
 const designersTableId = 'designers';
 
-export const createDesignerService = async (payload) => {
-  const response = await tablesDB.createRow({
+interface DesignerPayload {
+  display_name: string;
+  image_id: string;
+  name: string;
+  type: string;
+}
+type DesignerRow = Models.Row & DesignerPayload;
+export const createDesignerService = async (payload: DesignerPayload): Promise<DesignerRow> => {
+  const response = await tablesDB.createRow<DesignerRow>({
     databaseId: config.appwriteConfig.databaseId,
     tableId: designersTableId,
     rowId: uuid(),
@@ -17,7 +24,7 @@ export const createDesignerService = async (payload) => {
   return response;
 };
 
-export const deleteDesignerService = async (id) => {
+export const deleteDesignerService = async (id: string): Promise<Record<string, never>> => {
   const response = await tablesDB.deleteRow({
     databaseId: config.appwriteConfig.databaseId,
     tableId: designersTableId,
@@ -27,8 +34,8 @@ export const deleteDesignerService = async (id) => {
   return response;
 };
 
-export const readDesignerService = async (id) => {
-  const response = await tablesDB.getRow({
+export const readDesignerService = async (id: string): Promise<DesignerRow> => {
+  const response = await tablesDB.getRow<DesignerRow>({
     databaseId: config.appwriteConfig.databaseId,
     tableId: designersTableId,
     rowId: id
@@ -37,8 +44,8 @@ export const readDesignerService = async (id) => {
   return response;
 };
 
-export const readDesignersService = async () => {
-  const response = await tablesDB.listRows({
+export const readDesignersService = async (): Promise<Models.RowList<DesignerRow>> => {
+  const response = await tablesDB.listRows<DesignerRow>({
     databaseId: config.appwriteConfig.databaseId,
     tableId: designersTableId
   });
@@ -46,8 +53,8 @@ export const readDesignersService = async () => {
   return response;
 };
 
-export const updateDesignerService = async (id, payload) => {
-  const response = await tablesDB.updateRow({
+export const updateDesignerService = async (id: string, payload: DesignerPayload): Promise<DesignerRow> => {
+  const response = await tablesDB.updateRow<DesignerRow>({
     databaseId: config.appwriteConfig.databaseId,
     tableId: designersTableId,
     rowId: id,

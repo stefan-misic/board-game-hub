@@ -12,4 +12,4 @@ Test users:
     email: user@user.com
     password: useruser
 
-Master is up to date with BGH-05-authorization. Current/next branch in development is BGH-06-typescript.
+Master is up to date with BGH-05-authorization.

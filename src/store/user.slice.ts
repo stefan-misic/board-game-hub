@@ -1,3 +1,4 @@
+import type { Models } from 'appwrite';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import {
@@ -9,24 +10,24 @@ import {
   recoverUserPasswordService
 } from '../services/account.services';
 import { AuthenticationData } from '../types/authentication.types';
-import { StoreState } from './index';
+import { AsyncThunkConfig, StoreState } from './index';
 
 interface ChangeUserPasswordParams { id: string; password: string; secretKey: string; }
-export const changeUserPassword = createAsyncThunk(
+export const changeUserPassword = createAsyncThunk<Models.Token, ChangeUserPasswordParams, AsyncThunkConfig>(
   'user/changeUserPassword',
   async ({ id, password, secretKey }: ChangeUserPasswordParams, { rejectWithValue }) => {
     try {
       const response = await changeUserPasswordService(id, password, secretKey);
 
       return response;
-    } catch (error: any){
-      return rejectWithValue(error?.message);
+    } catch (error){
+      return rejectWithValue(error instanceof Error ? error.message : 'An unknown error occurred');
     }
   }
 );
 
 interface LoginUserParams { email: string; password: string; }
-export const loginUser = createAsyncThunk(
+export const loginUser = createAsyncThunk<AuthenticationData, LoginUserParams, AsyncThunkConfig>(
   'user/loginUser',
   async ({ email, password }: LoginUserParams, { rejectWithValue }) => {
     try {
@@ -34,20 +35,20 @@ export const loginUser = createAsyncThunk(
       const userResponse = await readUserService();
 
       const userData = {
-        email: loginResponse?.providerUid,
-        id: loginResponse?.userId,
-        permissions: userResponse?.labels
+        email: loginResponse?.providerUid || '',
+        id: loginResponse?.userId || '',
+        permissions: userResponse?.labels || null
       };
       localStorage.setItem('currentUser', JSON.stringify(userData));
       
       return userData;
-    } catch (error: any){
-      return rejectWithValue(error?.message);
+    } catch (error){
+      return rejectWithValue(error instanceof Error ? error.message : 'An unknown error occurred');
     }
   }
 );
 
-export const logoutUser = createAsyncThunk(
+export const logoutUser = createAsyncThunk<Record<string, never>, void, AsyncThunkConfig>(
   'user/logoutUser',
   async (_, { rejectWithValue }) => {
     try {
@@ -55,36 +56,36 @@ export const logoutUser = createAsyncThunk(
       localStorage.removeItem('currentUser');
       
       return response;
-    } catch (error: any){
-      return rejectWithValue(error?.message);
+    } catch (error){
+      return rejectWithValue(error instanceof Error ? error.message : 'An unknown error occurred');
     }
   }
 );
 
 interface SignupUserParams { email: string; password: string; }
-export const signupUser = createAsyncThunk(
+export const signupUser = createAsyncThunk<Models.User<Models.Preferences>, SignupUserParams, AsyncThunkConfig>(
   'user/signupUser',
   async ({ email, password }: SignupUserParams, { rejectWithValue }) => {
     try {
       const response = await createUserService(email, password);
 
       return response;
-    } catch (error: any){
-      return rejectWithValue(error?.message);
+    } catch (error){
+      return rejectWithValue(error instanceof Error ? error.message : 'An unknown error occurred');
     }
   }
 );
 
 interface RecoverUserParams { email: string; }
-export const recoverUserPassword = createAsyncThunk(
+export const recoverUserPassword = createAsyncThunk<Models.Token, RecoverUserParams, AsyncThunkConfig>(
   'user/recoverUserPassword',
   async ({ email }: RecoverUserParams, { rejectWithValue }) => {
     try {
       const response = await recoverUserPasswordService(email);
 
       return response;
-    } catch (error: any){
-      return rejectWithValue(error?.message);
+    } catch (error){
+      return rejectWithValue(error instanceof Error ? error.message : 'An unknown error occurred');
     }
   }
 );
@@ -112,9 +113,9 @@ const userSlice = createSlice({
           email: null,
           permissions: null,
           error: action.error.message
-        }
+        };
       })
-      .addCase(logoutUser.fulfilled, (state, action) => {
+      .addCase(logoutUser.fulfilled, (state) => {
         state.currentUser = null;
       })
       .addCase(logoutUser.rejected, (state, action) => {
@@ -123,7 +124,7 @@ const userSlice = createSlice({
           email: null,
           permissions: null,
           error: action.error.message
-        }
+        };
       });
   }
 });

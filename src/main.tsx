@@ -9,7 +9,7 @@ import store from './store';
 
 const rootContainer = document.getElementById('root');
 if (!rootContainer) {
-  throw new Error("Failed to find the root element. Make sure it exists in index.html");
+  throw new Error('Failed to find the root element. Make sure it exists in index.html');
 }
 const root = createRoot(rootContainer);
 const queryClient = new QueryClient();

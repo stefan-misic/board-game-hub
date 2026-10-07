@@ -13,8 +13,31 @@ import HotelClassIcon from '@mui/icons-material/HotelClass';
 import MenuIcon from '@mui/icons-material/Menu';
 import TaskIcon from '@mui/icons-material/Task';
 import UndoIcon from '@mui/icons-material/Undo';
+import { ReactElement } from 'react';
 
-const useIcons = () => {
+interface UseIcons {
+  designers: {
+    essential: ReactElement;
+    global: ReactElement;
+    other: ReactElement;
+    top: ReactElement;
+  };
+  buttons: {
+    cancel: ReactElement;
+    close: ReactElement;
+    create: ReactElement;
+    createConfirm: ReactElement;
+    delete: ReactElement;
+    deleteConfirm: ReactElement;
+    deleteList: ReactElement;
+    menu: ReactElement;
+    update: ReactElement;
+    updateList: ReactElement;
+    updateConfirm: ReactElement;
+    view: ReactElement;
+  };
+}
+const useIcons = (): UseIcons => {
   const designers = {
     essential: <GradeIcon sx={{ color: 'icon.orange' }} />,
     global: <EmojiPeopleIcon />,
