@@ -10,7 +10,7 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router';
@@ -20,15 +20,19 @@ import ImageUpload from '../../../components/ImageUpload/ImageUpload';
 import config from '../../../config';
 import useIcons from '../../../hooks/useIcons';
 import { createDesignerService, deleteDesignerService, updateDesignerService } from '../../../services/designers.services';
+import { StoreDispatch } from '../../../store';
 import { setHasMessage, setIsLoading } from '../../../store/global.slice';
-import { defaultValues, getSchema } from './DesignerForm.schema';
+import { defaultValues, DesignerFormValues, getSchema } from './DesignerForm.schema';
 
-const DesignerForm = ({ formData }) => {
-  const dispatch = useDispatch();
+interface DesignerFormProps {
+  formData?: DesignerFormValues | null | undefined
+}
+const DesignerForm = ({ formData }: DesignerFormProps) => {
+  const dispatch = useDispatch<StoreDispatch>();
   const { buttons: buttonIcons, designers: designerIcons } = useIcons();
   const navigate = useNavigate();
-  const { id } = useParams();
-  const [isDeletionDialogOpen, setIsDeletionDialogOpen] = useState(false);
+  const { id } = useParams<{ id: string }>();
+  const [isDeletionDialogOpen, setIsDeletionDialogOpen] = useState<boolean>(false);
   const { t: tb } = useTranslation('buttons');
   const { t: tde } = useTranslation('designers');
   const { t: tdi } = useTranslation('dialogs');
@@ -41,7 +45,7 @@ const DesignerForm = ({ formData }) => {
     getValues,
     handleSubmit,
     setValue
-  } = useForm({ defaultValues, resolver: yupResolver(schema) });
+  } = useForm<DesignerFormValues>({ defaultValues, resolver: yupResolver(schema) });
 
   useEffect(() => {
     if (formData) {
@@ -50,10 +54,10 @@ const DesignerForm = ({ formData }) => {
       setValue('name', formData?.name || '');
       setValue('type', formData?.type || '');
     }
-  }, [formData]);
+  }, [formData, setValue]);
 
   const { mutate: createDesignerMutation } = useMutation({
-    mutationFn: (designerData) => {
+    mutationFn: (designerData: DesignerFormValues) => {
       dispatch(setIsLoading(true));
       return createDesignerService(designerData);
     },
@@ -63,16 +67,17 @@ const DesignerForm = ({ formData }) => {
     },
     onError: (error) => {
       dispatch(setIsLoading(false));
-      dispatch(setHasMessage({ hasMessage: true, message: error, messageType: 'error' }));
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      dispatch(setHasMessage({ hasMessage: true, message: errorMessage, messageType: 'error' }));
     }
   });
 
   const { mutate: deleteDesignerMutation } = useMutation({
     mutationFn: () => {
       dispatch(setIsLoading(true));
-      return deleteDesignerService(id);
+      return deleteDesignerService(id ?? '');
     },
-    onSuccess: (response) => {
+    onSuccess: () => {
       setIsDeletionDialogOpen(false);
       navigate('/designers');
       dispatch(setHasMessage({ hasMessage: true, message: tde('designerDeleted'), messageType: 'success' }));
@@ -80,14 +85,15 @@ const DesignerForm = ({ formData }) => {
     onError: (error) => {
       setIsDeletionDialogOpen(false);
       dispatch(setIsLoading(false));
-      dispatch(setHasMessage({ hasMessage: true, message: error, messageType: 'error' }));
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      dispatch(setHasMessage({ hasMessage: true, message: errorMessage, messageType: 'error' }));
     }
   });
 
   const { mutate: updateDesignerMutation } = useMutation({
-    mutationFn: (designerData) => {
+    mutationFn: (designerData: DesignerFormValues) => {
       dispatch(setIsLoading(true));
-      return updateDesignerService(id, designerData);
+      return updateDesignerService(id ?? '', designerData);
     },
     onSuccess: (response) => {
       navigate(`/designers/${response?.$id}`);
@@ -95,11 +101,12 @@ const DesignerForm = ({ formData }) => {
     },
     onError: (error) => {
       dispatch(setIsLoading(false));
-      dispatch(setHasMessage({ hasMessage: true, message: error, messageType: 'error' }));
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      dispatch(setHasMessage({ hasMessage: true, message: errorMessage, messageType: 'error' }));
     }
   });
 
-  const handleDesignerFormSubmit = (submittedData) => {
+  const handleDesignerFormSubmit: SubmitHandler<DesignerFormValues> = (submittedData: DesignerFormValues) => {
     if (id) {
       updateDesignerMutation(submittedData);
     } else {
@@ -234,7 +241,7 @@ const DesignerForm = ({ formData }) => {
           confirmationButton={
             <Button
               color='error'
-              onClick={deleteDesignerMutation}
+              onClick={() => deleteDesignerMutation()} 
               startIcon={buttonIcons.deleteConfirm}
               variant='contained'
             >

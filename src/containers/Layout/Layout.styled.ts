@@ -1,7 +1,19 @@
 import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
 import Paper from '@mui/material/Paper';
+import { Theme } from '@mui/material/styles';
 import styled from 'styled-components';
+
+interface StyledContentProps {
+  $short?: boolean;
+}
+
+interface StyledDrawerProps {
+  $open?: boolean;
+}
+
+interface StyledLayoutProps {
+  $type?: 'authentication' | 'default';
+}
 
 export const StyledBody = styled(Box)`
     display: flex;
@@ -12,47 +24,47 @@ export const StyledBody = styled(Box)`
     width: 100%;
 `;
 
-export const StyledContent = styled(Box)`
+export const StyledContent = styled(Box)<StyledContentProps>`
     flex-grow: 1;
-    margin-left: ${({ $short, theme }) => $short ? 'calc(240px + 1rem)' : 'calc(60px + 1rem)'};
+    margin-left: ${({ $short }) => $short ? 'calc(240px + 1rem)' : 'calc(60px + 1rem)'};
     width: 100%;
-    transition: ${({ $short, theme }) => $short ?
-    theme.transitions.create(['margin-left'], {
-      duration: theme.transitions.duration.enteringScreen,
-      easing: theme.transitions.easing.sharp
+    transition: ${(props) => props.$short ?
+    (props.theme as Theme).transitions.create(['margin-left'], {
+      duration: (props.theme as Theme).transitions.duration.enteringScreen,
+      easing: (props.theme as Theme).transitions.easing.sharp
     })
-    : theme.transitions.create(['margin-left'], {
-      duration: theme.transitions.duration.leavingScreen,
-      easing: theme.transitions.easing.sharp
+    : (props.theme as Theme).transitions.create(['margin-left'], {
+      duration: (props.theme as Theme).transitions.duration.leavingScreen,
+      easing: (props.theme as Theme).transitions.easing.sharp
     })};
 
-    @media (max-width: ${({ theme }) => theme.breakpoints.values.md}px) {
+    @media (max-width: ${(props) => (props.theme as Theme).breakpoints.values.md}px) {
         margin-left: calc(60px + 1rem);
     }
 `;
 
-export const StyledDrawer = styled(Paper)`
+export const StyledDrawer = styled(Paper)<StyledDrawerProps>`
     && {
         bottom: 0;
-        box-shadow: ${({ theme }) => theme.shadows[4]};
+        box-shadow: ${(props) => (props.theme as Theme).shadows[4]};
         left: 0;
         position: absolute;
         top: 0;
 
         &.MuiPaper-root {
             overflow-x: hidden;
-            transition: ${({ $open, theme }) => $open ?
-    theme.transitions.create(['width'], {
-      duration: theme.transitions.duration.enteringScreen,
-      easing: theme.transitions.easing.sharp
+            transition: ${(props) => props.$open ?
+    (props.theme as Theme).transitions.create(['width'], {
+      duration: (props.theme as Theme).transitions.duration.enteringScreen,
+      easing: (props.theme as Theme).transitions.easing.sharp
     })
-    : theme.transitions.create(['width'], {
-      duration: theme.transitions.duration.leavingScreen,
-      easing: theme.transitions.easing.sharp
+    : (props.theme as Theme).transitions.create(['width'], {
+      duration: (props.theme as Theme).transitions.duration.leavingScreen,
+      easing: (props.theme as Theme).transitions.easing.sharp
     })};
-            width: ${({ $open, theme }) => $open ? '240px' : '60px'};
+            width: ${({ $open }) => $open ? '240px' : '60px'};
 
-            @media (max-width: ${({ theme }) => theme.breakpoints.values.md}px) {
+            @media (max-width: ${(props) => (props.theme as Theme).breakpoints.values.md}px) {
                 width: 60px;
 
                 .MuiList-root {
@@ -82,15 +94,15 @@ export const StyledDrawer = styled(Paper)`
                         }
 
                         .MuiListItemText-root {
-                            opacity: ${({ $open, theme }) => $open ? 1 : 0};
-                            transition: ${({ $open, theme }) => $open ?
-    theme.transitions.create(['opacity'], {
-      duration: theme.transitions.duration.enteringScreen,
-      easing: theme.transitions.easing.sharp
+                            opacity: ${({ $open }) => $open ? 1 : 0};
+                            transition: ${(props) => props.$open ?
+    (props.theme as Theme).transitions.create(['opacity'], {
+      duration: (props.theme as Theme).transitions.duration.enteringScreen,
+      easing: (props.theme as Theme).transitions.easing.sharp
     })
-    : theme.transitions.create(['opacity'], {
-      duration: theme.transitions.duration.leavingScreen,
-      easing: theme.transitions.easing.sharp
+    : (props.theme as Theme).transitions.create(['opacity'], {
+      duration: (props.theme as Theme).transitions.duration.leavingScreen,
+      easing: (props.theme as Theme).transitions.easing.sharp
     })};
                         }
                     }
@@ -135,9 +147,9 @@ export const StyledHeader = styled(Paper)`
     }
 `;
 
-export const StyledLayout = styled(Box)`
-    background-color: ${({ theme }) => theme.palette.background.main};
-    display: ${({ $type , theme}) => {
+export const StyledLayout = styled(Box)<StyledLayoutProps>`
+    background-color: ${(props) => (props.theme as Theme).palette.background.main};
+    display: ${({ $type }) => {
     switch ($type) {
     case 'authentication':
       return 'flex';

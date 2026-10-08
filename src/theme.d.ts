@@ -21,6 +21,7 @@ declare module '@mui/material/styles' {
 
   interface TypeBackground {
     dark?: string;
+    main?: string;
   }
 
   interface TypeText {

@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 
 import { StyledAvatar } from '../../global_styled_components';
 import { uploadFileService } from '../../services/storage.services';
+import { StoreDispatch } from '../../store';
 import { setHasMessage, setIsLoading } from '../../store/global.slice';
 
 interface ImageUploadProps {
@@ -17,7 +18,7 @@ interface ImageUploadProps {
   onImageUpload: (imageId: string) => void;
 }
 const ImageUpload = ({ alternativeText, initialImage, onImageUpload }: ImageUploadProps) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<StoreDispatch>();
   const [image, setImage] = useState<string | ArrayBuffer | null>(initialImage || '');
   const [previousInitialImage, setPreviousInitialImage] = useState<string>(initialImage);
   const { t: tb } = useTranslation('buttons');

@@ -3,12 +3,12 @@ import { SyntheticEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import useIcons from '../../hooks/useIcons';
-import { StoreState } from '../../store';
+import { StoreDispatch, StoreState } from '../../store';
 import { selectHasMessage, selectMessage, selectMessageType, setHasMessage } from '../../store/global.slice';
 import { StyledSnackbar } from './MessagePopup.styled';
 
 const MessagePopup = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<StoreDispatch>();
   const { buttons: buttonIcons } = useIcons();
   const isVisible = useSelector<StoreState, boolean>(selectHasMessage);
   const message = useSelector<StoreState, string>(selectMessage);

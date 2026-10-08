@@ -16,6 +16,7 @@ import UndoIcon from '@mui/icons-material/Undo';
 import { ReactElement } from 'react';
 
 export interface ButtonIcons {
+  [key: string]: ReactElement; 
   cancel: ReactElement;
   close: ReactElement;
   create: ReactElement;
@@ -31,6 +32,7 @@ export interface ButtonIcons {
 }
 
 export interface DesignerIcons {
+  [key: string]: ReactElement; 
   essential: ReactElement;
   global: ReactElement;
   other: ReactElement;

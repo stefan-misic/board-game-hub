@@ -1,6 +1,11 @@
+import { ReactNode } from 'react';
+
 import { StyledLayout } from './Layout.styled';
 
-const AuthenticationLayout = ({ children }) => {
+interface AuthenticationLayoutProps {
+  children: ReactNode
+}
+const AuthenticationLayout = ({ children }: AuthenticationLayoutProps) => {
   return (
     <StyledLayout $type='authentication'>
       {children}

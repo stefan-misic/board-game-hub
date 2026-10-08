@@ -16,21 +16,23 @@ import {
 } from '../../../global_styled_components';
 import useIcons from '../../../hooks/useIcons';
 import { readDesignerService } from '../../../services/designers.services';
+import { StoreDispatch, StoreState } from '../../../store';
 import { setIsLoading } from '../../../store/global.slice';
 import { selectIsCurrentUserAdmin } from '../../../store/user.slice';
 
 const DesignerDetailsPage = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<StoreDispatch>();
   const { buttons: buttonIcons, designers: designerIcons } = useIcons();
   const navigate = useNavigate();
-  const { id } = useParams();
-  const isCurrentUserAdmin = useSelector(selectIsCurrentUserAdmin);
+  const { id } = useParams<{ id: string }>();
+  const isCurrentUserAdmin = useSelector<StoreState, boolean>(selectIsCurrentUserAdmin);
   const { t: tb } = useTranslation('buttons');
   const { t: td } = useTranslation('designers');
 
   const { data: designerDetails, isLoading: designerDetailsIsLoading } = useQuery({
     queryKey: ['designer-details', id],
-    queryFn: () => readDesignerService(id)
+    queryFn: () => readDesignerService(id ?? ''),
+    enabled: !!id
   });
 
   useEffect(() => {
@@ -39,7 +41,7 @@ const DesignerDetailsPage = () => {
     } else {
       dispatch(setIsLoading(false));
     }
-  }, [designerDetailsIsLoading]);
+  }, [designerDetailsIsLoading, dispatch]);
 
   return (
     <PageContainer elevation={4}>
@@ -69,7 +71,7 @@ const DesignerDetailsPage = () => {
             <StyledLabel>{td('type')}</StyledLabel>
             <Stack direction='row' gap={1}>
               {designerDetails?.type ? designerIcons[designerDetails.type] : designerIcons.other}
-              <StyledValue>{td(designerDetails?.type) || '-'}</StyledValue>
+              <StyledValue>{designerDetails?.type ? td(designerDetails.type) : '-'}</StyledValue>
             </Stack>
           </Grid>
           

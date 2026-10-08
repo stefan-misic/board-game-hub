@@ -21,17 +21,18 @@ import {
   StyledLabel,
   StyledValue
 } from '../../../global_styled_components';
-import useIcons, { DesignerIcons } from '../../../hooks/useIcons';
+import useIcons from '../../../hooks/useIcons';
 import { deleteDesignerService, DesignerRow, readDesignersService } from '../../../services/designers.services';
+import { StoreDispatch, StoreState } from '../../../store';
 import { setHasMessage, setIsLoading } from '../../../store/global.slice';
 import { selectIsCurrentUserAdmin } from '../../../store/user.slice';
 
 const DesignersListPage = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<StoreDispatch>();
   const { buttons: buttonIcons, designers: designerIcons } = useIcons();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const isCurrentUserAdmin = useSelector(selectIsCurrentUserAdmin);
+  const isCurrentUserAdmin = useSelector<StoreState, boolean>(selectIsCurrentUserAdmin);
   const [isDeletionDialogOpen, setIsDeletionDialogOpen] = useState<boolean>(false);
   const [interactedEntry, setInteractedEntry] = useState<DesignerRow | null>(null);
   const { t: tb } = useTranslation('buttons');
@@ -115,8 +116,8 @@ const DesignersListPage = () => {
             {!isTablet && (<Stack>
               <StyledLabel $size='list'>{tde('type')}</StyledLabel>
               <Stack direction='row' gap={1}>
-                {designer.type && designer.type in designerIcons ? designerIcons[designer.type as keyof DesignerIcons] : designerIcons.other}
-                <StyledValue $size='list'>{tde(designer?.type) || '-'}</StyledValue>
+                {designer?.type ? designerIcons[designer.type] : designerIcons.other}
+                <StyledValue $size='list'>{designer?.type ? tde(designer.type) : '-'}</StyledValue>
               </Stack>
             </Stack>)}
           </Box>

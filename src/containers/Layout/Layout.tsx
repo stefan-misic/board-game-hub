@@ -10,7 +10,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { useTheme } from '@mui/material/styles';
 import Tooltip from '@mui/material/Tooltip';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useState } from 'react';
+import { MouseEvent, ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
@@ -18,6 +18,7 @@ import { useNavigate } from 'react-router';
 import Logo from '../../assets/Logo.svg';
 import { StyledAvatar } from '../../global_styled_components';
 import useIcons from '../../hooks/useIcons';
+import { StoreDispatch } from '../../store';
 import { setHasMessage, setIsLoading } from '../../store/global.slice';
 import { logoutUser } from '../../store/user.slice';
 import {
@@ -28,12 +29,21 @@ import {
   StyledLayout
 } from './Layout.styled';
 
-const Layout = ({ children }) => {
-  const dispatch = useDispatch();
+interface NavigationButton {
+  icon: ReactNode;
+  link: string;
+  text: string;
+}
+
+interface LayoutProps {
+  children: ReactNode
+}
+const Layout = ({ children }: LayoutProps) => {
+  const dispatch = useDispatch<StoreDispatch>();
   const { buttons: buttonIcons, designers: designerIcons } = useIcons();
   const navigate = useNavigate();
-  const [isNavigationOpen, setIsNavigationOpen] = useState(true);
-  const [userMenuAnchorEl, setUserMenuAnchorEl] = useState(null);
+  const [isNavigationOpen, setIsNavigationOpen] = useState<boolean>(true);
+  const [userMenuAnchorEl, setUserMenuAnchorEl] = useState<null | HTMLElement>(null);
   const { t: ta } = useTranslation('authentication');
   const { t: tl } = useTranslation('layout');
 
@@ -45,14 +55,16 @@ const Layout = ({ children }) => {
     dispatch(setIsLoading(true));
     try {
       await dispatch(logoutUser()).unwrap();
+      dispatch(setIsLoading(false));
       dispatch(setHasMessage({ hasMessage: true, message: ta('successfulLoggOut'), messageType: 'success' }));
     } catch (error) {
-      dispatch(setHasMessage({ hasMessage: true, message: error, messageType: 'error' }));
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      dispatch(setIsLoading(false));
+      dispatch(setHasMessage({ hasMessage: true, message: errorMessage, messageType: 'error' }));
     }
-    dispatch(setIsLoading(false));
   };
   
-  const handleUserMenuClick = (event) => {
+  const handleUserMenuClick = (event: MouseEvent<HTMLButtonElement>) => {
     setUserMenuAnchorEl(event.currentTarget);
   };
 
@@ -62,7 +74,7 @@ const Layout = ({ children }) => {
 
   const isUserMenuOpen = Boolean(userMenuAnchorEl);
 
-  const navigationButtons = [
+  const navigationButtons: NavigationButton[] = [
     {
       icon: designerIcons.global,
       link: '/designers',
@@ -110,11 +122,7 @@ const Layout = ({ children }) => {
       </StyledHeader>
 
       <StyledBody>
-        <StyledDrawer
-          $open={isNavigationOpen}
-          open={isNavigationOpen}
-          variant='permanent'
-        >
+        <StyledDrawer $open={isNavigationOpen}>
           <List>
             {navigationButtons.map((navButton, i) => (
               <ListItem key={i}>

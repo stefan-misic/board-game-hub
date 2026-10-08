@@ -6,15 +6,17 @@ import { useParams } from 'react-router';
 import DesignerForm from '../components/DesignerForm';
 import { PageContainer } from '../../../global_styled_components';
 import { readDesignerService } from '../../../services/designers.services';
+import { StoreDispatch } from '../../../store';
 import { setIsLoading } from '../../../store/global.slice';
 
 const UpdateDesignerPage = () => {
-  const dispatch = useDispatch();
-  const { id } = useParams();
+  const dispatch = useDispatch<StoreDispatch>();
+  const { id } = useParams<{ id: string }>();
 
   const { data: designerDetails, isLoading: designerDetailsIsLoading } = useQuery({
     queryKey: ['designer-details', id],
-    queryFn: () => readDesignerService(id)
+    queryFn: () => readDesignerService(id ?? ''),
+    enabled: !!id
   });
 
   useEffect(() => {
@@ -23,7 +25,7 @@ const UpdateDesignerPage = () => {
     } else {
       dispatch(setIsLoading(false));
     }
-  }, [designerDetailsIsLoading]);
+  }, [designerDetailsIsLoading, dispatch]);
 
   return (
     <PageContainer elevation={4}>

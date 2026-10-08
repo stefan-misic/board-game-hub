@@ -2,19 +2,20 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router';
 
+import { StoreDispatch } from '../../../store';
 import { setHasMessage, setIsLoading } from '../../../store/global.slice';
 import { changeUserPassword } from '../../../store/user.slice';
-import { defaultValues, getSchema } from './NewPasswordForm.schema';
+import { defaultValues, getSchema, NewPasswordFormValues } from './NewPasswordForm.schema';
 
 const NewPasswordForm = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<StoreDispatch>();
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const { t: ta } = useTranslation('authentication');
   const { t: tv } = useTranslation('validation');
 
@@ -23,18 +24,20 @@ const NewPasswordForm = () => {
     control,
     formState: { errors },
     handleSubmit
-  } = useForm({ defaultValues, resolver: yupResolver(schema) });
+  } = useForm<NewPasswordFormValues>({ defaultValues, resolver: yupResolver(schema) });
 
-  const handleNewPasswordFormSubmit = async (submittedData) => {
+  const handleNewPasswordFormSubmit: SubmitHandler<NewPasswordFormValues> = async (submittedData) => {
     dispatch(setIsLoading(true));
     try {
-      await dispatch(changeUserPassword({ id: searchParams.get('userId'), password: submittedData.password, secretKey: searchParams.get('secret') })).unwrap();
+      await dispatch(changeUserPassword({ id: searchParams.get('userId') ?? '', password: submittedData.password, secretKey: searchParams.get('secret') ?? '' })).unwrap();
       navigate('/login');
+      dispatch(setIsLoading(false));
       dispatch(setHasMessage({ hasMessage: true, message: ta('successfulNewPassword'), messageType: 'success' }));
     } catch (error) {
-      dispatch(setHasMessage({ hasMessage: true, message: error, messageType: 'error' }));
+      dispatch(setIsLoading(false));
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      dispatch(setHasMessage({ hasMessage: true, message: errorMessage, messageType: 'error' }));
     }
-    dispatch(setIsLoading(false));
   };
 
   return (
@@ -51,6 +54,7 @@ const NewPasswordForm = () => {
             label={ta('password')}
             onChange={onChange}
             required={true}
+            type='password'
             value={value}
           />
         )}

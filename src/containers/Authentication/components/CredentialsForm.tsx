@@ -2,17 +2,18 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 
+import { StoreDispatch } from '../../../store';
 import { setHasMessage, setIsLoading } from '../../../store/global.slice';
 import { loginUser, signupUser } from '../../../store/user.slice';
-import { defaultValues, getSchema } from './CredentialsForm.schema';
+import { CredentialsFormValues, defaultValues, getSchema } from './CredentialsForm.schema';
 
 const CredentialsForm = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<StoreDispatch>();
   const location = useLocation();
   const navigate = useNavigate();
   const { t: ta } = useTranslation('authentication');
@@ -23,9 +24,9 @@ const CredentialsForm = () => {
     control,
     formState: { errors },
     handleSubmit
-  } = useForm({ defaultValues, resolver: yupResolver(schema) });
+  } = useForm<CredentialsFormValues>({ defaultValues, resolver: yupResolver(schema) });
 
-  const handleCredentialsFormSubmit = async (submittedData) => {
+  const handleCredentialsFormSubmit: SubmitHandler<CredentialsFormValues> = async (submittedData) => {
     dispatch(setIsLoading(true));
     if (location.pathname.includes('/login')) {
       try {
@@ -33,7 +34,8 @@ const CredentialsForm = () => {
         dispatch(setHasMessage({ hasMessage: true, message: ta('successfulLoggIn'), messageType: 'success' }));
       } catch (error) {
         dispatch(setIsLoading(false));
-        dispatch(setHasMessage({ hasMessage: true, message: error, messageType: 'error' }));
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+        dispatch(setHasMessage({ hasMessage: true, message: errorMessage, messageType: 'error' }));
       }
     } else {
       try {
@@ -43,7 +45,8 @@ const CredentialsForm = () => {
         dispatch(setHasMessage({ hasMessage: true, message: ta('successfulSignUp'), messageType: 'success' }));
       } catch (error) {
         dispatch(setIsLoading(false));
-        dispatch(setHasMessage({ hasMessage: true, message: error, messageType: 'error' }));
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+        dispatch(setHasMessage({ hasMessage: true, message: errorMessage, messageType: 'error' }));
       }
     }
   };
@@ -78,6 +81,7 @@ const CredentialsForm = () => {
             label={ta('password')}
             onChange={onChange}
             required={true}
+            type='password'
             value={value}
           />
         )}

@@ -1,10 +1,15 @@
 import * as yup from 'yup';
 
-export const defaultValues = {
+import { TranslationParam } from '../../../types/translations.types';
+
+export interface NewPasswordFormValues {
+  password: string;
+}
+export const defaultValues: NewPasswordFormValues = {
   password: ''
 };
 
-export const getSchema = (tv) =>
+export const getSchema = (tv: TranslationParam): yup.ObjectSchema<NewPasswordFormValues> =>
   yup.object({
     password: yup.string()
       .required(tv('requiredField'))
