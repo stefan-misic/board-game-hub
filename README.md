@@ -3,13 +3,8 @@
 Created with Vite template for React.
 
 Current stable branch is dev. Enter npm run dev to run.
+Master is up to date with BGH-06-typescript.
 
-Test users:
-- admin - (you need to be admin if you want to add new entries to lists, and update them)
-    email: admin@admin.com
-    password: adminadmin
-- user - (or create your own)
-    email: user@user.com
-    password: useruser
+In order to use Board Game Hub locally, you need to create and set up appwrite project on https://appwrite.io/. Then use obtained ids to set up .env file in root folder of cloned git repository with values for variables defined in .env.example.
 
-Master is up to date with BGH-05-authorization. Current/next branch in development is BGH-06-typescript.
+To use all list features you need to create admin user. In appwrite consol add 'admin' label to any created user.
