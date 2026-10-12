@@ -16,6 +16,7 @@ import { useNavigate, useParams } from 'react-router';
 import ConfirmationDialog from '../../../components/ConfirmationDialog/ConfirmationDialog';
 import ImageUpload from '../../../components/ImageUpload/ImageUpload';
 import config from '../../../config';
+import { getCountries } from '../../../helpers/utils';
 import useIcons from '../../../hooks/useIcons';
 import { defaultValues, getSchema, PublisherFormValues } from './PublisherForm.schema';
 
@@ -23,6 +24,7 @@ interface PublisherFormProps {
   formData?: PublisherFormValues | null | undefined
 }
 const PublisherForm = ({ formData }: PublisherFormProps) => {
+  const countries = getCountries();
   const { buttons: buttonIcons, publishers: publisherIcons } = useIcons();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -43,12 +45,12 @@ const PublisherForm = ({ formData }: PublisherFormProps) => {
 
   useEffect(() => {
     if (formData) {
-      setValue('country', formData?.country || '');
+      setValue('country', formData?.country || null);
       setValue('image_id', formData?.image_id || '');
       setValue('name', formData?.name || '');
       setValue('type', formData?.type || '');
     }
-  }, [formData, setValue]);
+  }, [countries, formData, setValue]);
 
   const handlePublisherFormSubmit: SubmitHandler<PublisherFormValues> = (submittedData: PublisherFormValues) => {
     if (id) {
@@ -82,21 +84,6 @@ const PublisherForm = ({ formData }: PublisherFormProps) => {
         <Grid size={12}>
           <Controller
             control={control}
-            name='country'
-            render={({ field: { onChange, value } }) => (
-              <TextField
-                error={!!errors?.country}
-                helperText={errors?.country?.message}
-                label={tdp('country')}
-                onChange={onChange}
-                value={value}
-              />
-            )}
-          />
-        </Grid>
-        <Grid size={12}>
-          <Controller
-            control={control}
             name='name'
             render={({ field: { onChange, value } }) => (
               <TextField
@@ -107,6 +94,43 @@ const PublisherForm = ({ formData }: PublisherFormProps) => {
                 required={true}
                 value={value}
               />
+            )}
+          />
+        </Grid>
+        <Grid size={12}>
+          <Controller
+            control={control}
+            name='country'
+            render={({ field: { onChange, value } }) => (
+              <FormControl fullWidth>
+                <InputLabel id='publisher-country-label'>{tdp('country')}</InputLabel>
+                <Select
+                  id='publisher-country'
+                  label={tdp('country')}
+                  labelId='publisher-country-label'
+                  onChange={onChange}
+                  renderValue={(selectedId) => {
+                    const selectedCountry = countries?.find((country) => country.id === selectedId);
+                    if (!selectedCountry) return '';
+                    return (
+                      <Stack alignItems='center' direction='row' gap={1}>
+                        <img alt={selectedCountry.name} src={selectedCountry.flagUrl} style={{ height: 'auto', width: 20 }} />
+                        <span>{selectedCountry.name}</span>
+                      </Stack>
+                    );
+                  }}
+                  value={value ?? ''}
+                >
+                  {countries?.map((country) => (
+                    <MenuItem key={country?.id} value={country?.id ?? ''}>
+                      <Stack alignItems='center' direction='row' gap={1}>
+                        <img alt={country?.name} src={country?.flagUrl} style={{ height: 'auto', width: 20 }} />
+                        {country?.name}
+                      </Stack>
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             )}
           />
         </Grid>
