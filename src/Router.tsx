@@ -11,6 +11,7 @@ import UnauthorizedPage from './containers/Authorization/pages/UnauthorizedPage'
 import DesignersRoutes from './containers/Designers/DesignersRoutes';
 import AuthenticationLayout from './containers/Layout/AuthenticationLayout';
 import Layout from './containers/Layout/Layout';
+import PublishersRoutes from './containers/Publishers/PublishersRoutes';
 import { RouteConfig } from './types/router.types';
 
 interface RouterProps {
@@ -18,7 +19,8 @@ interface RouterProps {
 }
 const Router = ({ isUserAuthenticated }: RouterProps) => {
   const routes: RouteConfig[] = isUserAuthenticated ? [
-    ...DesignersRoutes
+    ...DesignersRoutes,
+    ...PublishersRoutes
   ] : [
     ...AuthenticationRoutes
   ];

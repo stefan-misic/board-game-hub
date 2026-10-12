@@ -1,12 +1,13 @@
 import * as yup from 'yup';
 
+import { DesignerType } from '../../../services/designers.services';
 import { TranslationParam } from '../../../types/translations.types';
 
 export interface DesignerFormValues {
   display_name: string;
   image_id: string;
   name: string;
-  type: string;
+  type: DesignerType;
 }
 export const defaultValues: DesignerFormValues = {
   display_name: '',
@@ -20,5 +21,5 @@ export const getSchema = (tv: TranslationParam): yup.ObjectSchema<DesignerFormVa
     display_name: yup.string().required(tv('requiredField')),
     image_id: yup.string().defined().default(''),
     name: yup.string().defined().default(''),
-    type: yup.string().defined().default('')
+    type: yup.string().oneOf<DesignerFormValues['type']>(['top', 'essential', 'other']).required()
   }).required();

@@ -40,7 +40,7 @@ interface LayoutProps {
 }
 const Layout = ({ children }: LayoutProps) => {
   const dispatch = useDispatch<StoreDispatch>();
-  const { buttons: buttonIcons, designers: designerIcons } = useIcons();
+  const { buttons: buttonIcons, designers: designerIcons, publishers: publisherIcons } = useIcons();
   const navigate = useNavigate();
   const [isNavigationOpen, setIsNavigationOpen] = useState<boolean>(true);
   const [userMenuAnchorEl, setUserMenuAnchorEl] = useState<null | HTMLElement>(null);
@@ -79,6 +79,11 @@ const Layout = ({ children }: LayoutProps) => {
       icon: designerIcons.global,
       link: '/designers',
       text: tl('designers')
+    },
+    {
+      icon: publisherIcons.global,
+      link: '/publishers',
+      text: tl('publishers')
     }
   ];
   
