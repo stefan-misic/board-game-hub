@@ -75,6 +75,10 @@ export const ListEntry = styled(Paper)<ListEntryProps>`
             width: 150px;
 
             @media (max-width: ${(props) => (props.theme as Theme).breakpoints.values.md}px) {
+                width: 125px;
+            }
+
+            @media (max-width: ${(props) => (props.theme as Theme).breakpoints.values.sm}px) {
                 width: 100px;
             }
 

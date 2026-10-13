@@ -20,7 +20,7 @@ import ImageUpload from '../../../components/ImageUpload/ImageUpload';
 import config from '../../../config';
 import { createErrorMessage, getCountries } from '../../../helpers/utils';
 import useIcons from '../../../hooks/useIcons';
-import { createPublisherService } from '../../../services/publishers.services';
+import { createPublisherService, deletePublisherService, updatePublisherService } from '../../../services/publishers.services';
 import { StoreDispatch } from '../../../store';
 import { setHasMessage, setIsLoading } from '../../../store/global.slice';
 import { defaultValues, getSchema, PublisherFormValues } from './PublisherForm.schema';
@@ -73,9 +73,41 @@ const PublisherForm = ({ formData }: PublisherFormProps) => {
     }
   });
 
+  const { mutate: deletePublisherMutation } = useMutation({
+    mutationFn: () => {
+      dispatch(setIsLoading(true));
+      return deletePublisherService(id ?? '');
+    },
+    onSuccess: () => {
+      setIsDeletionDialogOpen(false);
+      navigate('/publishers');
+      dispatch(setHasMessage({ hasMessage: true, message: tp('publisherDeleted'), messageType: 'success' }));
+    },
+    onError: (error) => {
+      setIsDeletionDialogOpen(false);
+      dispatch(setIsLoading(false));
+      dispatch(setHasMessage({ hasMessage: true, message: createErrorMessage(error), messageType: 'error' }));
+    }
+  });
+  
+  const { mutate: updatePublisherMutation } = useMutation({
+    mutationFn: (publisherData: PublisherFormValues) => {
+      dispatch(setIsLoading(true));
+      return updatePublisherService(id ?? '', publisherData);
+    },
+    onSuccess: (response) => {
+      navigate(`/publishers/${response?.$id}`);
+      dispatch(setHasMessage({ hasMessage: true, message: tp('publisherUpdated'), messageType: 'success' }));
+    },
+    onError: (error) => {
+      dispatch(setIsLoading(false));
+      dispatch(setHasMessage({ hasMessage: true, message: createErrorMessage(error), messageType: 'error' }));
+    }
+  });
+
   const handlePublisherFormSubmit: SubmitHandler<PublisherFormValues> = (submittedData: PublisherFormValues) => {
     if (id) {
-      console.log(submittedData);
+      updatePublisherMutation(submittedData);
     } else {
       createPublisherMutation(submittedData);
     }
@@ -226,7 +258,7 @@ const PublisherForm = ({ formData }: PublisherFormProps) => {
           confirmationButton={
             <Button
               color='error'
-              onClick={() => console.log('delete')} 
+              onClick={() => deletePublisherMutation()}
               startIcon={buttonIcons.deleteConfirm}
               variant='contained'
             >

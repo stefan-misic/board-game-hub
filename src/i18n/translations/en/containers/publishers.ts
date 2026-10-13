@@ -7,5 +7,6 @@ export default {
   other: 'Other',
   publisherCreated: 'Publisher created.',
   publisherDeleted: 'Publisher deleted.',
+  publisherUpdated: 'Publisher updated.',
   type: 'Type'
 };
