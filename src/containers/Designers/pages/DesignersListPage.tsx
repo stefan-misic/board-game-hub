@@ -101,25 +101,29 @@ const DesignersListPage = () => {
       {designersList?.rows?.map((designer) => (
         <ListEntry key={designer?.$id}>
           <Box>
-            {!isTablet && (<StyledAvatar
-              alt={tde('avatar')}
-              $size='list'
-              src={designer.image_id ?
-                `${config.appwriteConfig.apiEndpoint}/storage/buckets/${config.appwriteConfig.bucketId}/files/${designer.image_id}/view?project=${config.appwriteConfig.projectId}`
-                : ''
-              }
-            />)}
+            {!isTablet && (
+              <StyledAvatar
+                alt={tde('avatar')}
+                $size='list'
+                src={designer.image_id ?
+                  `${config.appwriteConfig.apiEndpoint}/storage/buckets/${config.appwriteConfig.bucketId}/files/${designer.image_id}/view?project=${config.appwriteConfig.projectId}`
+                  : ''
+                }
+              />
+            )}
             <Stack>
               <StyledLabel $size='list'>{tde('displayName')}</StyledLabel>
               <StyledValue $size='list'>{designer?.display_name || '-'}</StyledValue>
             </Stack>
-            {!isTablet && (<Stack>
-              <StyledLabel $size='list'>{tde('type')}</StyledLabel>
-              <Stack direction='row' gap={1}>
-                {designer?.type ? designerIcons[designer.type] : designerIcons.other}
-                <StyledValue $size='list'>{designer?.type ? tde(designer.type) : '-'}</StyledValue>
+            {!isTablet && (
+              <Stack>
+                <StyledLabel $size='list'>{tde('type')}</StyledLabel>
+                <Stack direction='row' gap={1}>
+                  {designer?.type ? designerIcons[designer.type] : designerIcons.other}
+                  <StyledValue $size='list'>{designer?.type ? tde(designer.type) : '-'}</StyledValue>
+                </Stack>
               </Stack>
-            </Stack>)}
+            )}
           </Box>
 
           <Box>

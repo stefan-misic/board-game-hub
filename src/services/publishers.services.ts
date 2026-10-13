@@ -25,3 +25,22 @@ export const createPublisherService = async (payload: PublisherPayload): Promise
 
   return response;
 };
+
+export const deletePublisherService = async (id: string): Promise<Record<string, never>> => {
+  const response = await tablesDB.deleteRow({
+    databaseId: config.appwriteConfig.databaseId,
+    tableId: publishersTableId,
+    rowId: id
+  });
+
+  return response;
+};
+
+export const readPublishersService = async (): Promise<Models.RowList<PublisherRow>> => {
+  const response = await tablesDB.listRows<PublisherRow>({
+    databaseId: config.appwriteConfig.databaseId,
+    tableId: publishersTableId
+  });
+
+  return response;
+};

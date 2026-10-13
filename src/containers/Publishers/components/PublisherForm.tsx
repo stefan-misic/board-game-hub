@@ -37,7 +37,7 @@ const PublisherForm = ({ formData }: PublisherFormProps) => {
   const [isDeletionDialogOpen, setIsDeletionDialogOpen] = useState<boolean>(false);
   const { t: tb } = useTranslation('buttons');
   const { t: tdi } = useTranslation('dialogs');
-  const { t: tdp } = useTranslation('publishers');
+  const { t: tp } = useTranslation('publishers');
   const { t: tv } = useTranslation('validation');
 
   const schema = getSchema(tv);
@@ -65,7 +65,7 @@ const PublisherForm = ({ formData }: PublisherFormProps) => {
     },
     onSuccess: (response) => {
       navigate(`/publishers/${response?.$id}`);
-      dispatch(setHasMessage({ hasMessage: true, message: tdp('publisherCreated'), messageType: 'success' }));
+      dispatch(setHasMessage({ hasMessage: true, message: tp('publisherCreated'), messageType: 'success' }));
     },
     onError: (error) => {
       dispatch(setIsLoading(false));
@@ -93,7 +93,7 @@ const PublisherForm = ({ formData }: PublisherFormProps) => {
           name='image_id'
           render={({ field: { onChange } }) => (
             <ImageUpload
-              alternativeText={tdp('avatar')}
+              alternativeText={tp('avatar')}
               initialImage={initialStorageImage}
               onImageUpload={onChange}
             />
@@ -110,7 +110,7 @@ const PublisherForm = ({ formData }: PublisherFormProps) => {
               <TextField
                 error={!!errors?.name}
                 helperText={errors?.name?.message}
-                label={tdp('name')}
+                label={tp('name')}
                 onChange={onChange}
                 required={true}
                 value={value}
@@ -124,10 +124,10 @@ const PublisherForm = ({ formData }: PublisherFormProps) => {
             name='country'
             render={({ field: { onChange, value } }) => (
               <FormControl fullWidth>
-                <InputLabel id='publisher-country-label'>{tdp('country')}</InputLabel>
+                <InputLabel id='publisher-country-label'>{tp('country')}</InputLabel>
                 <Select
                   id='publisher-country'
-                  label={tdp('country')}
+                  label={tp('country')}
                   labelId='publisher-country-label'
                   onChange={onChange}
                   renderValue={(selectedId) => {
@@ -161,27 +161,27 @@ const PublisherForm = ({ formData }: PublisherFormProps) => {
             name='type'
             render={({ field: { onChange, value } }) => (
               <FormControl fullWidth>
-                <InputLabel id='publisher-type-label'>{tdp('type')}</InputLabel>
+                <InputLabel id='publisher-type-label'>{tp('type')}</InputLabel>
                 <Select
                   id='publisher-type'
-                  label={tdp('type')}
+                  label={tp('type')}
                   labelId='publisher-type-label'
                   onChange={onChange}
                   renderValue={() => (
                     <Stack direction='row' gap={1}>
                       {publisherIcons[value]}
-                      {tdp(value)}
+                      {tp(value)}
                     </Stack>
                   )}
                   value={value}
                 >
                   <MenuItem value='essential'>
                     <ListItemIcon>{publisherIcons.essential}</ListItemIcon>
-                    {tdp('essential')}
+                    {tp('essential')}
                   </MenuItem>
                   <MenuItem value='other'>
                     <ListItemIcon>{publisherIcons.other}</ListItemIcon>
-                    {tdp('other')}
+                    {tp('other')}
                   </MenuItem>
                 </Select>
               </FormControl>
