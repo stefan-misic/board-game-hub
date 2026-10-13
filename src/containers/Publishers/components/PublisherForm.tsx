@@ -8,16 +8,21 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
+import { useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router';
 
 import ConfirmationDialog from '../../../components/ConfirmationDialog/ConfirmationDialog';
 import ImageUpload from '../../../components/ImageUpload/ImageUpload';
 import config from '../../../config';
-import { getCountries } from '../../../helpers/utils';
+import { createErrorMessage, getCountries } from '../../../helpers/utils';
 import useIcons from '../../../hooks/useIcons';
+import { createPublisherService } from '../../../services/publishers.services';
+import { StoreDispatch } from '../../../store';
+import { setHasMessage, setIsLoading } from '../../../store/global.slice';
 import { defaultValues, getSchema, PublisherFormValues } from './PublisherForm.schema';
 
 interface PublisherFormProps {
@@ -25,6 +30,7 @@ interface PublisherFormProps {
 }
 const PublisherForm = ({ formData }: PublisherFormProps) => {
   const countries = getCountries();
+  const dispatch = useDispatch<StoreDispatch>();
   const { buttons: buttonIcons, publishers: publisherIcons } = useIcons();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -52,11 +58,26 @@ const PublisherForm = ({ formData }: PublisherFormProps) => {
     }
   }, [countries, formData, setValue]);
 
+  const { mutate: createPublisherMutation } = useMutation({
+    mutationFn: (publisherData: PublisherFormValues) => {
+      dispatch(setIsLoading(true));
+      return createPublisherService(publisherData);
+    },
+    onSuccess: (response) => {
+      navigate(`/publishers/${response?.$id}`);
+      dispatch(setHasMessage({ hasMessage: true, message: tdp('publisherCreated'), messageType: 'success' }));
+    },
+    onError: (error) => {
+      dispatch(setIsLoading(false));
+      dispatch(setHasMessage({ hasMessage: true, message: createErrorMessage(error), messageType: 'error' }));
+    }
+  });
+
   const handlePublisherFormSubmit: SubmitHandler<PublisherFormValues> = (submittedData: PublisherFormValues) => {
     if (id) {
       console.log(submittedData);
     } else {
-      console.log(submittedData);
+      createPublisherMutation(submittedData);
     }
   };
 

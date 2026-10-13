@@ -1,9 +1,9 @@
 import * as yup from 'yup';
 
+import { PublisherType } from '../../../services/publishers.services';
 import { Country } from '../../../types/global.types';
 import { TranslationParam } from '../../../types/translations.types';
 
-type PublisherType = 'essential' | 'other';
 export interface PublisherFormValues {
   country: Country['id'];
   image_id: string;

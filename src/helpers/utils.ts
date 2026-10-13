@@ -13,16 +13,16 @@ const availableCountries: Country[] = [
     name: 'Czech Republic'
   },
   {
-    code: 'DE',
-    flagUrl: FlagDe,
-    id: 276,
-    name: 'Germany'
-  },
-  {
     code: 'FR',
     flagUrl: FlagFr,
     id: 250,
     name: 'France'
+  },
+  {
+    code: 'DE',
+    flagUrl: FlagDe,
+    id: 276,
+    name: 'Germany'
   },
   {
     code: 'GB',
@@ -37,6 +37,11 @@ const availableCountries: Country[] = [
     name: 'United States'
   }
 ];
+
+export const createErrorMessage = (error: Error | unknown): string => {
+  const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+  return errorMessage;
+};
 
 export const getCountries = (): Country[] => {
   return availableCountries;

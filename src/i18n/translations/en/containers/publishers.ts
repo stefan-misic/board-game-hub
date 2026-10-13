@@ -4,5 +4,6 @@ export default {
   essential: 'Essential',
   name: 'Name',
   other: 'Other',
+  publisherCreated: 'Publisher created.',
   type: 'Type'
 };

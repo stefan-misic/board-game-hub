@@ -21,6 +21,7 @@ import {
   StyledLabel,
   StyledValue
 } from '../../../global_styled_components';
+import { createErrorMessage } from '../../../helpers/utils';
 import useIcons from '../../../hooks/useIcons';
 import { deleteDesignerService, DesignerRow, readDesignersService } from '../../../services/designers.services';
 import { StoreDispatch, StoreState } from '../../../store';
@@ -74,8 +75,7 @@ const DesignersListPage = () => {
     onError: (error) => {
       setIsDeletionDialogOpen(false);
       dispatch(setIsLoading(false));
-      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-      dispatch(setHasMessage({ hasMessage: true, message: errorMessage, messageType: 'error' }));
+      dispatch(setHasMessage({ hasMessage: true, message: createErrorMessage(error), messageType: 'error' }));
       setInteractedEntry(null);
     }
   });

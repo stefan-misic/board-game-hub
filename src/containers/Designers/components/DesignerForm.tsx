@@ -18,6 +18,7 @@ import { useNavigate, useParams } from 'react-router';
 import ConfirmationDialog from '../../../components/ConfirmationDialog/ConfirmationDialog';
 import ImageUpload from '../../../components/ImageUpload/ImageUpload';
 import config from '../../../config';
+import { createErrorMessage } from '../../../helpers/utils';
 import useIcons from '../../../hooks/useIcons';
 import { createDesignerService, deleteDesignerService, updateDesignerService } from '../../../services/designers.services';
 import { StoreDispatch } from '../../../store';
@@ -67,8 +68,7 @@ const DesignerForm = ({ formData }: DesignerFormProps) => {
     },
     onError: (error) => {
       dispatch(setIsLoading(false));
-      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-      dispatch(setHasMessage({ hasMessage: true, message: errorMessage, messageType: 'error' }));
+      dispatch(setHasMessage({ hasMessage: true, message: createErrorMessage(error), messageType: 'error' }));
     }
   });
 
@@ -85,8 +85,7 @@ const DesignerForm = ({ formData }: DesignerFormProps) => {
     onError: (error) => {
       setIsDeletionDialogOpen(false);
       dispatch(setIsLoading(false));
-      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-      dispatch(setHasMessage({ hasMessage: true, message: errorMessage, messageType: 'error' }));
+      dispatch(setHasMessage({ hasMessage: true, message: createErrorMessage(error), messageType: 'error' }));
     }
   });
 
@@ -101,8 +100,7 @@ const DesignerForm = ({ formData }: DesignerFormProps) => {
     },
     onError: (error) => {
       dispatch(setIsLoading(false));
-      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-      dispatch(setHasMessage({ hasMessage: true, message: errorMessage, messageType: 'error' }));
+      dispatch(setHasMessage({ hasMessage: true, message: createErrorMessage(error), messageType: 'error' }));
     }
   });
 

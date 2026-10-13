@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router';
 
 import Logo from '../../assets/Logo.svg';
 import { StyledAvatar } from '../../global_styled_components';
+import { createErrorMessage } from '../../helpers/utils';
 import useIcons from '../../hooks/useIcons';
 import { StoreDispatch } from '../../store';
 import { setHasMessage, setIsLoading } from '../../store/global.slice';
@@ -58,9 +59,8 @@ const Layout = ({ children }: LayoutProps) => {
       dispatch(setIsLoading(false));
       dispatch(setHasMessage({ hasMessage: true, message: ta('successfulLoggOut'), messageType: 'success' }));
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
       dispatch(setIsLoading(false));
-      dispatch(setHasMessage({ hasMessage: true, message: errorMessage, messageType: 'error' }));
+      dispatch(setHasMessage({ hasMessage: true, message: createErrorMessage(error), messageType: 'error' }));
     }
   };
   
