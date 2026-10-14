@@ -17,8 +17,7 @@ import { useNavigate, useParams } from 'react-router';
 
 import ConfirmationDialog from '../../../components/ConfirmationDialog/ConfirmationDialog';
 import ImageUpload from '../../../components/ImageUpload/ImageUpload';
-import config from '../../../config';
-import { createErrorMessage, getCountries } from '../../../helpers/utils';
+import { createErrorMessage, getCountries, getStorageImageUrl } from '../../../helpers/utils';
 import useIcons from '../../../hooks/useIcons';
 import { createPublisherService, deletePublisherService, updatePublisherService } from '../../../services/publishers.services';
 import { StoreDispatch } from '../../../store';
@@ -113,9 +112,7 @@ const PublisherForm = ({ formData }: PublisherFormProps) => {
     }
   };
 
-  const initialStorageImage = formData?.image_id
-    ? `${config.appwriteConfig.apiEndpoint}/storage/buckets/${config.appwriteConfig.bucketId}/files/${formData?.image_id}/view?project=${config.appwriteConfig.projectId}`
-    : '';
+  const initialStorageImage = formData?.image_id ? getStorageImageUrl(formData?.image_id) : '';
 
   return (
     <Grid container spacing={2}>

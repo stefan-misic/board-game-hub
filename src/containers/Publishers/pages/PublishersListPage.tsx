@@ -12,7 +12,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 
 import ConfirmationDialog from '../../../components/ConfirmationDialog/ConfirmationDialog';
-import config from '../../../config';
 import {
   ListEntry,
   ListHeader,
@@ -21,7 +20,7 @@ import {
   StyledLabel,
   StyledValue
 } from '../../../global_styled_components';
-import { createErrorMessage, getCountries } from '../../../helpers/utils';
+import { createErrorMessage, getCountries, getStorageImageUrl } from '../../../helpers/utils';
 import useIcons from '../../../hooks/useIcons';
 import { deletePublisherService, PublisherRow, readPublishersService } from '../../../services/publishers.services';
 import { StoreDispatch, StoreState } from '../../../store';
@@ -109,10 +108,7 @@ const PublishersListPage = () => {
                 <StyledAvatar
                   alt={tp('avatar')}
                   $size='list'
-                  src={publisher.image_id ?
-                    `${config.appwriteConfig.apiEndpoint}/storage/buckets/${config.appwriteConfig.bucketId}/files/${publisher.image_id}/view?project=${config.appwriteConfig.projectId}`
-                    : ''
-                  }
+                  src={publisher.image_id ? getStorageImageUrl(publisher.image_id) : ''}
                 />
               )}
               <Stack>

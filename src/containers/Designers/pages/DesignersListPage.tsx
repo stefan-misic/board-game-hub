@@ -12,7 +12,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 
 import ConfirmationDialog from '../../../components/ConfirmationDialog/ConfirmationDialog';
-import config from '../../../config';
 import {
   ListEntry,
   ListHeader,
@@ -21,7 +20,7 @@ import {
   StyledLabel,
   StyledValue
 } from '../../../global_styled_components';
-import { createErrorMessage } from '../../../helpers/utils';
+import { createErrorMessage, getStorageImageUrl } from '../../../helpers/utils';
 import useIcons from '../../../hooks/useIcons';
 import { deleteDesignerService, DesignerRow, readDesignersService } from '../../../services/designers.services';
 import { StoreDispatch, StoreState } from '../../../store';
@@ -105,10 +104,7 @@ const DesignersListPage = () => {
               <StyledAvatar
                 alt={tde('avatar')}
                 $size='list'
-                src={designer.image_id ?
-                  `${config.appwriteConfig.apiEndpoint}/storage/buckets/${config.appwriteConfig.bucketId}/files/${designer.image_id}/view?project=${config.appwriteConfig.projectId}`
-                  : ''
-                }
+                src={designer.image_id ? getStorageImageUrl(designer.image_id) : ''}
               />
             )}
             <Stack>

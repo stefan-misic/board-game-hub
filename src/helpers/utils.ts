@@ -3,6 +3,7 @@ import FlagDe from '../assets/flags/de.jpg';
 import FlagFr from '../assets/flags/fr.jpg';
 import FlagGb from '../assets/flags/gb.jpg';
 import FlagUs from '../assets/flags/us.jpg';
+import config from '../config';
 import { Country } from '../types/global.types';
 
 const availableCountries: Country[] = [
@@ -45,6 +46,10 @@ export const createErrorMessage = (error: Error | unknown): string => {
 
 export const getCountries = (): Country[] => {
   return availableCountries;
+};
+
+export const getStorageImageUrl = (imageId: string): string => {
+  return `${config.appwriteConfig.apiEndpoint}/storage/buckets/${config.appwriteConfig.bucketId}/files/${imageId}/view?project=${config.appwriteConfig.projectId}`;
 };
 
 export const testEmail = (email: string): boolean => {
