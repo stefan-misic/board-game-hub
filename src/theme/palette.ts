@@ -2,6 +2,7 @@ import {
   green,
   grey,
   orange,
+  purple,
   red,
   yellow
 } from '@mui/material/colors';
@@ -21,6 +22,7 @@ export default {
   icon: {
     orange: orange[600],
     red: red[600],
+    purple: purple[600],
     yellow: yellow[600]
   },
   success: {

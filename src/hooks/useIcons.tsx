@@ -1,6 +1,10 @@
 import AddTaskIcon from '@mui/icons-material/AddTask';
+import AnimationIcon from '@mui/icons-material/Animation';
+import AspectRatioIcon from '@mui/icons-material/AspectRatio';
 import AssignmentAddIcon from '@mui/icons-material/AssignmentAdd';
+import CasinoIcon from '@mui/icons-material/Casino';
 import CloseIcon from '@mui/icons-material/Close';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -16,7 +20,7 @@ import TaskIcon from '@mui/icons-material/Task';
 import UndoIcon from '@mui/icons-material/Undo';
 import { ReactElement } from 'react';
 
-export interface ButtonIcons {
+interface ButtonIcons {
   [key: string]: ReactElement; 
   cancel: ReactElement;
   close: ReactElement;
@@ -32,7 +36,7 @@ export interface ButtonIcons {
   view: ReactElement;
 }
 
-export interface DesignerIcons {
+interface DesignerIcons {
   [key: string]: ReactElement; 
   essential: ReactElement;
   global: ReactElement;
@@ -40,7 +44,16 @@ export interface DesignerIcons {
   top: ReactElement;
 }
 
-export interface PublisherIcons {
+interface GameIcons {
+  [key: string]: ReactElement;
+  edition: ReactElement;
+  expansion: ReactElement;
+  global: ReactElement;
+  sequel: ReactElement;
+  system: ReactElement;
+}
+
+interface PublisherIcons {
   [key: string]: ReactElement; 
   essential: ReactElement;
   global: ReactElement;
@@ -48,8 +61,9 @@ export interface PublisherIcons {
 }
 
 interface UseIcons {
-  designers: DesignerIcons;
   buttons: ButtonIcons;
+  designers: DesignerIcons;
+  games: GameIcons,
   publishers: PublisherIcons;
 }
 const useIcons = (): UseIcons => {
@@ -58,6 +72,13 @@ const useIcons = (): UseIcons => {
     global: <EmojiPeopleIcon />,
     other: <EmojiPeopleIcon sx={{ color: 'icon.yellow' }} />,
     top: <HotelClassIcon sx={{ color: 'icon.red' }} />
+  };
+  const games: GameIcons = {
+    edition: <ContentCopyIcon sx={{ color: 'icon.red' }} />,
+    expansion: <AspectRatioIcon sx={{ color: 'icon.orange' }} />,
+    global: <CasinoIcon />,
+    sequel: <AnimationIcon sx={{ color: 'icon.yellow' }} />,
+    system: <CasinoIcon sx={{ color: 'icon.purple' }} />
   };
   const publishers: PublisherIcons = {
     essential: <GradeIcon sx={{ color: 'icon.orange' }} />,
@@ -82,6 +103,7 @@ const useIcons = (): UseIcons => {
 
   return {
     designers,
+    games,
     publishers,
 
     buttons

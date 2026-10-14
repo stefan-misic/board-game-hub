@@ -5,6 +5,7 @@ declare module '@mui/material/styles' {
     border?: string;
     icon?: {
       orange: string;
+      purple: string;
       red: string;
       yellow: string;
     };
@@ -14,6 +15,7 @@ declare module '@mui/material/styles' {
     border?: string;
     icon?: {
       orange: string;
+      purple: string;
       red: string;
       yellow: string;
     };

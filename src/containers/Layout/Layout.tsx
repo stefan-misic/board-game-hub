@@ -41,7 +41,12 @@ interface LayoutProps {
 }
 const Layout = ({ children }: LayoutProps) => {
   const dispatch = useDispatch<StoreDispatch>();
-  const { buttons: buttonIcons, designers: designerIcons, publishers: publisherIcons } = useIcons();
+  const {
+    buttons: buttonIcons,
+    designers: designerIcons,
+    games: gameIcons,
+    publishers: publisherIcons
+  } = useIcons();
   const navigate = useNavigate();
   const [isNavigationOpen, setIsNavigationOpen] = useState<boolean>(true);
   const [userMenuAnchorEl, setUserMenuAnchorEl] = useState<null | HTMLElement>(null);
@@ -75,6 +80,11 @@ const Layout = ({ children }: LayoutProps) => {
   const isUserMenuOpen = Boolean(userMenuAnchorEl);
 
   const navigationButtons: NavigationButton[] = [
+    {
+      icon: gameIcons.global,
+      link: '/games',
+      text: tl('games')
+    },
     {
       icon: designerIcons.global,
       link: '/designers',

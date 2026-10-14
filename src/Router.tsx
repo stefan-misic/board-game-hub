@@ -9,6 +9,7 @@ import RouteGuard from './components/RouteGuard/RouteGuard';
 import AuthenticationRoutes from './containers/Authentication/AuthenticationRoutes';
 import UnauthorizedPage from './containers/Authorization/pages/UnauthorizedPage';
 import DesignersRoutes from './containers/Designers/DesignersRoutes';
+import GamesRoutes from './containers/Games/GamesRoutes';
 import AuthenticationLayout from './containers/Layout/AuthenticationLayout';
 import Layout from './containers/Layout/Layout';
 import PublishersRoutes from './containers/Publishers/PublishersRoutes';
@@ -20,6 +21,7 @@ interface RouterProps {
 const Router = ({ isUserAuthenticated }: RouterProps) => {
   const routes: RouteConfig[] = isUserAuthenticated ? [
     ...DesignersRoutes,
+    ...GamesRoutes,
     ...PublishersRoutes
   ] : [
     ...AuthenticationRoutes
