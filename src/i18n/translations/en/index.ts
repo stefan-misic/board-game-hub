@@ -2,6 +2,7 @@ import translationAuthentication from './containers/authentication';
 import translationAuthorization from './containers/authorization';
 import translationDesigners from './containers/designers';
 import translationLayout from './containers/layout';
+import translationPublishers from './containers/publishers';
 
 import translationButtons from './global/buttons';
 import translationDialogs from './global/dialogs';
@@ -13,6 +14,7 @@ export default {
   authorization: translationAuthorization,
   designers: translationDesigners,
   layout: translationLayout,
+  publishers: translationPublishers,
 
   buttons: translationButtons,
   dialogs: translationDialogs,

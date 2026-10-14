@@ -7,13 +7,13 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router';
 
-import config from '../../../config';
 import {
   PageContainer,
   StyledAvatar,
   StyledLabel,
   StyledValue
 } from '../../../global_styled_components';
+import { getStorageImageUrl } from '../../../helpers/utils';
 import useIcons from '../../../hooks/useIcons';
 import { readDesignerService } from '../../../services/designers.services';
 import { StoreDispatch, StoreState } from '../../../store';
@@ -50,10 +50,7 @@ const DesignerDetailsPage = () => {
           <Stack alignItems='center' direction='column'>
             <StyledAvatar
               alt={td('avatar')}
-              src={designerDetails?.image_id ?
-                `${config.appwriteConfig.apiEndpoint}/storage/buckets/${config.appwriteConfig.bucketId}/files/${designerDetails?.image_id}/view?project=${config.appwriteConfig.projectId}`
-                : ''
-              }
+              src={designerDetails?.image_id ? getStorageImageUrl(designerDetails?.image_id) : ''}
             />
           </Stack>
         </Grid>

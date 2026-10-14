@@ -10,6 +10,7 @@ import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import GradeIcon from '@mui/icons-material/Grade';
 import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined';
 import HotelClassIcon from '@mui/icons-material/HotelClass';
+import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 import MenuIcon from '@mui/icons-material/Menu';
 import TaskIcon from '@mui/icons-material/Task';
 import UndoIcon from '@mui/icons-material/Undo';
@@ -39,9 +40,17 @@ export interface DesignerIcons {
   top: ReactElement;
 }
 
+export interface PublisherIcons {
+  [key: string]: ReactElement; 
+  essential: ReactElement;
+  global: ReactElement;
+  other: ReactElement;
+}
+
 interface UseIcons {
   designers: DesignerIcons;
   buttons: ButtonIcons;
+  publishers: PublisherIcons;
 }
 const useIcons = (): UseIcons => {
   const designers: DesignerIcons = {
@@ -49,6 +58,11 @@ const useIcons = (): UseIcons => {
     global: <EmojiPeopleIcon />,
     other: <EmojiPeopleIcon sx={{ color: 'icon.yellow' }} />,
     top: <HotelClassIcon sx={{ color: 'icon.red' }} />
+  };
+  const publishers: PublisherIcons = {
+    essential: <GradeIcon sx={{ color: 'icon.orange' }} />,
+    global: <LocalLibraryIcon />,
+    other: <EmojiPeopleIcon sx={{ color: 'icon.yellow' }} />
   };
 
   const buttons: ButtonIcons = {
@@ -68,6 +82,7 @@ const useIcons = (): UseIcons => {
 
   return {
     designers,
+    publishers,
 
     buttons
   };

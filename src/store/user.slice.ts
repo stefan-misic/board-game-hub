@@ -1,6 +1,7 @@
 import type { Models } from 'appwrite';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
+import { createErrorMessage } from '../helpers/utils';
 import {
   changeUserPasswordService,
   createUserService,
@@ -21,7 +22,7 @@ export const changeUserPassword = createAsyncThunk<Models.Token, ChangeUserPassw
 
       return response;
     } catch (error){
-      return rejectWithValue(error instanceof Error ? error.message : 'An unknown error occurred');
+      return rejectWithValue(createErrorMessage(error));
     }
   }
 );
@@ -43,7 +44,7 @@ export const loginUser = createAsyncThunk<AuthenticationData, LoginUserParams, A
       
       return userData;
     } catch (error){
-      return rejectWithValue(error instanceof Error ? error.message : 'An unknown error occurred');
+      return rejectWithValue(createErrorMessage(error));
     }
   }
 );
@@ -57,7 +58,7 @@ export const logoutUser = createAsyncThunk<Record<string, never>, void, AsyncThu
       
       return response;
     } catch (error){
-      return rejectWithValue(error instanceof Error ? error.message : 'An unknown error occurred');
+      return rejectWithValue(createErrorMessage(error));
     }
   }
 );
@@ -71,7 +72,7 @@ export const signupUser = createAsyncThunk<Models.User<Models.Preferences>, Sign
 
       return response;
     } catch (error){
-      return rejectWithValue(error instanceof Error ? error.message : 'An unknown error occurred');
+      return rejectWithValue(createErrorMessage(error));
     }
   }
 );
@@ -85,7 +86,7 @@ export const recoverUserPassword = createAsyncThunk<Models.Token, RecoverUserPar
 
       return response;
     } catch (error){
-      return rejectWithValue(error instanceof Error ? error.message : 'An unknown error occurred');
+      return rejectWithValue(createErrorMessage(error));
     }
   }
 );

@@ -3,11 +3,11 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
 
-import DesignerForm from '../components/DesignerForm';
 import { PageContainer } from '../../../global_styled_components';
 import { readDesignerService } from '../../../services/designers.services';
 import { StoreDispatch } from '../../../store';
 import { setIsLoading } from '../../../store/global.slice';
+import DesignerForm from '../components/DesignerForm';
 
 const UpdateDesignerPage = () => {
   const dispatch = useDispatch<StoreDispatch>();
