@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router';
 
 import Logo from '../../assets/Logo.svg';
 import { StyledAvatar } from '../../global_styled_components';
+import { createErrorMessage } from '../../helpers/utils';
 import useIcons from '../../hooks/useIcons';
 import { StoreDispatch } from '../../store';
 import { setHasMessage, setIsLoading } from '../../store/global.slice';
@@ -40,7 +41,7 @@ interface LayoutProps {
 }
 const Layout = ({ children }: LayoutProps) => {
   const dispatch = useDispatch<StoreDispatch>();
-  const { buttons: buttonIcons, designers: designerIcons } = useIcons();
+  const { buttons: buttonIcons, designers: designerIcons, publishers: publisherIcons } = useIcons();
   const navigate = useNavigate();
   const [isNavigationOpen, setIsNavigationOpen] = useState<boolean>(true);
   const [userMenuAnchorEl, setUserMenuAnchorEl] = useState<null | HTMLElement>(null);
@@ -58,9 +59,8 @@ const Layout = ({ children }: LayoutProps) => {
       dispatch(setIsLoading(false));
       dispatch(setHasMessage({ hasMessage: true, message: ta('successfulLoggOut'), messageType: 'success' }));
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
       dispatch(setIsLoading(false));
-      dispatch(setHasMessage({ hasMessage: true, message: errorMessage, messageType: 'error' }));
+      dispatch(setHasMessage({ hasMessage: true, message: createErrorMessage(error), messageType: 'error' }));
     }
   };
   
@@ -79,6 +79,11 @@ const Layout = ({ children }: LayoutProps) => {
       icon: designerIcons.global,
       link: '/designers',
       text: tl('designers')
+    },
+    {
+      icon: publisherIcons.global,
+      link: '/publishers',
+      text: tl('publishers')
     }
   ];
   

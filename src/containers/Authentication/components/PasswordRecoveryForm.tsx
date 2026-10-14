@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 
+import { createErrorMessage } from '../../../helpers/utils';
 import { StoreDispatch } from '../../../store';
 import { setHasMessage, setIsLoading } from '../../../store/global.slice';
 import { recoverUserPassword } from '../../../store/user.slice';
@@ -33,8 +34,7 @@ const PasswordRecoveryForm = () => {
       dispatch(setHasMessage({ hasMessage: true, message: ta('successfulPasswordRecovery'), messageType: 'success' }));
     } catch (error) {
       dispatch(setIsLoading(false));
-      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-      dispatch(setHasMessage({ hasMessage: true, message: errorMessage, messageType: 'error' }));
+      dispatch(setHasMessage({ hasMessage: true, message: createErrorMessage(error), messageType: 'error' }));
     }
   };
 

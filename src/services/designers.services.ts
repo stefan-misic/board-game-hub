@@ -6,11 +6,12 @@ import { tablesDB } from '../lib/appwrite';
 
 const designersTableId = 'designers';
 
+export type DesignerType = 'top' | 'essential' | 'other';
 interface DesignerPayload {
   display_name: string;
   image_id: string;
   name: string;
-  type: string;
+  type: DesignerType;
 }
 export type DesignerRow = Models.Row & DesignerPayload;
 export const createDesignerService = async (payload: DesignerPayload): Promise<DesignerRow> => {
