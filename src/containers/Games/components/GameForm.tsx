@@ -8,6 +8,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
+import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -15,8 +16,10 @@ import { useNavigate, useParams } from 'react-router';
 
 import ConfirmationDialog from '../../../components/ConfirmationDialog/ConfirmationDialog';
 import ImageUpload from '../../../components/ImageUpload/ImageUpload';
+import SearchInput from '../../../components/SearchInput/SearchInput';
 import { getStorageImageUrl } from '../../../helpers/utils';
 import useIcons from '../../../hooks/useIcons';
+import { searchDesignersService } from '../../../services/designers.services';
 import { defaultValues, GameFormValues, getSchema } from './GameForm.schema';
 
 interface GameFormProps {
@@ -26,6 +29,7 @@ const GameForm = ({ formData }: GameFormProps) => {
   const { buttons: buttonIcons, games: gameIcons } = useIcons();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+  const [designersSearchTerm, setDesignersSearchTerm] = useState<string>('');
   const [isDeletionDialogOpen, setIsDeletionDialogOpen] = useState<boolean>(false);
   const { t: tb } = useTranslation('buttons');
   const { t: tdi } = useTranslation('dialogs');
@@ -48,6 +52,12 @@ const GameForm = ({ formData }: GameFormProps) => {
       setValue('type', formData?.type || '');
     }
   }, [formData, setValue]);
+
+  const { data: designersSearch, isLoading: designersSearchIsLoading } = useQuery({
+    queryKey: ['designers-search'],
+    queryFn: () => searchDesignersService(designersSearchTerm ?? ''),
+    enabled: !!designersSearchTerm
+  });
 
   const handleGameFormSubmit: SubmitHandler<GameFormValues> = (submittedData: GameFormValues) => {
     if (id) {
@@ -95,13 +105,16 @@ const GameForm = ({ formData }: GameFormProps) => {
           <Controller
             control={control}
             name='system_id'
-            render={({ field: { onChange, value } }) => (
-              <TextField
+            render={({ field: { onChange } }) => (
+              <SearchInput
                 error={!!errors?.system_id}
                 helperText={errors?.system_id?.message}
+                isLoading={false}
                 label={tg('system')}
-                onChange={onChange}
-                value={value}
+                onSetSearchTerm={() => console.log('')}
+                options={[]}
+                setValue={onChange}
+                value={null}
               />
             )}
           />
@@ -111,11 +124,14 @@ const GameForm = ({ formData }: GameFormProps) => {
             control={control}
             name='designer'
             render={({ field: { onChange, value } }) => (
-              <TextField
+              <SearchInput
                 error={!!errors?.designer}
                 helperText={errors?.designer?.message}
+                isLoading={designersSearchIsLoading}
                 label={tg('designer')}
-                onChange={onChange}
+                onSetSearchTerm={setDesignersSearchTerm}
+                options={designersSearch ?? []}
+                setValue={onChange}
                 value={value}
               />
             )}
@@ -125,13 +141,16 @@ const GameForm = ({ formData }: GameFormProps) => {
           <Controller
             control={control}
             name='publisher'
-            render={({ field: { onChange, value } }) => (
-              <TextField
+            render={({ field: { onChange } }) => (
+              <SearchInput
                 error={!!errors?.publisher}
                 helperText={errors?.publisher?.message}
+                isLoading={false}
                 label={tg('publisher')}
-                onChange={onChange}
-                value={value}
+                onSetSearchTerm={() => console.log('')}
+                options={[]}
+                setValue={onChange}
+                value={null}
               />
             )}
           />

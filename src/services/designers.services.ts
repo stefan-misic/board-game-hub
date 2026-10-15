@@ -1,6 +1,8 @@
 import type { Models } from 'appwrite';
+import { Query } from 'appwrite';
 import { v4 as uuid } from 'uuid';
 
+import { SearchInputOption } from '../components/SearchInput/SearchInput';
 import config from '../config';
 import { tablesDB } from '../lib/appwrite';
 
@@ -52,6 +54,28 @@ export const readDesignersService = async (): Promise<Models.RowList<DesignerRow
   });
 
   return response;
+};
+
+export const searchDesignersService = async (searchTerm: string): Promise<SearchInputOption[]> => {
+  try {
+    const response = await tablesDB.listRows<DesignerRow>({
+      databaseId: config.appwriteConfig.databaseId,
+      tableId: designersTableId,
+      queries: [
+        Query.search('display_name', searchTerm),
+        Query.select(['$id', 'display_name', 'image_id'])
+      ]
+    });
+
+    return response?.rows?.map(row => ({
+      id: row.$id,
+      imageId: row.image_id,
+      label: row.display_name
+    }));
+  } catch (error) {
+    console.error('Error:', error);
+    return [];
+  }
 };
 
 export const updateDesignerService = async (id: string, payload: DesignerPayload): Promise<DesignerRow> => {

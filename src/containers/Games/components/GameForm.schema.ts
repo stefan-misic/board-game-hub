@@ -1,10 +1,11 @@
 import * as yup from 'yup';
 
+import { SearchInputOption } from '../../../components/SearchInput/SearchInput';
 import { TranslationParam } from '../../../types/translations.types';
 
 export interface GameFormValues {
   category: string;
-  designer: string;
+  designer: SearchInputOption;
   image_id: string;
   is_owned: boolean;
   last_played: string;
@@ -18,7 +19,11 @@ export interface GameFormValues {
 }
 export const defaultValues: GameFormValues = {
   category: '',
-  designer: '',
+  designer: {
+    id: '',
+    imageId: '',
+    label: ''
+  },
   image_id: '',
   is_owned: false,
   last_played: '',
@@ -34,7 +39,11 @@ export const defaultValues: GameFormValues = {
 export const getSchema = (tv: TranslationParam): yup.ObjectSchema<GameFormValues> =>
   yup.object({
     category: yup.string().defined().default(''),
-    designer: yup.string().defined().default(''),
+    designer: yup.object({
+      id: yup.string().defined().default(''),
+      imageId: yup.string().defined().default(''),
+      label: yup.string().defined().default('')
+    }).required(),
     image_id: yup.string().defined().default(''),
     is_owned: yup.boolean().required(),
     last_played: yup.string().defined().default(''),
