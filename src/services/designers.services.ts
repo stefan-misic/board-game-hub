@@ -57,13 +57,16 @@ export const readDesignersService = async (): Promise<Models.RowList<DesignerRow
 };
 
 export const searchDesignersService = async (searchTerm: string): Promise<SearchInputOption[]> => {
+  if (!searchTerm || searchTerm.trim().length < 3) return [];
+
   try {
     const response = await tablesDB.listRows<DesignerRow>({
       databaseId: config.appwriteConfig.databaseId,
       tableId: designersTableId,
       queries: [
-        Query.search('display_name', searchTerm),
-        Query.select(['$id', 'display_name', 'image_id'])
+        Query.startsWith('display_name', searchTerm), 
+        Query.select(['$id', 'display_name', 'image_id']),
+        Query.limit(10)
       ]
     });
 
@@ -71,9 +74,9 @@ export const searchDesignersService = async (searchTerm: string): Promise<Search
       id: row.$id,
       imageId: row.image_id,
       label: row.display_name
-    }));
+    })) ?? [];
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error - searchDesignersService:', error);
     return [];
   }
 };

@@ -1,6 +1,8 @@
 import type { Models } from 'appwrite';
+import { Query } from 'appwrite';
 import { v4 as uuid } from 'uuid';
 
+import { SearchInputOption } from '../components/SearchInput/SearchInput';
 import config from '../config';
 import { tablesDB } from '../lib/appwrite';
 import { Country } from '../types/global.types';
@@ -53,6 +55,31 @@ export const readPublishersService = async (): Promise<Models.RowList<PublisherR
   });
 
   return response;
+};
+
+export const searchPublishersService = async (searchTerm: string): Promise<SearchInputOption[]> => {
+  if (!searchTerm || searchTerm.trim().length < 3) return [];
+
+  try {
+    const response = await tablesDB.listRows<PublisherRow>({
+      databaseId: config.appwriteConfig.databaseId,
+      tableId: publishersTableId,
+      queries: [
+        Query.startsWith('name', searchTerm), 
+        Query.select(['$id', 'name', 'image_id']),
+        Query.limit(10)
+      ]
+    });
+
+    return response?.rows?.map(row => ({
+      id: row.$id,
+      imageId: row.image_id,
+      label: row.name
+    })) ?? [];
+  } catch (error) {
+    console.error('Error - searchPublishersService:', error);
+    return [];
+  }
 };
 
 export const updatePublisherService = async (id: string, payload: PublisherPayload): Promise<PublisherRow> => {

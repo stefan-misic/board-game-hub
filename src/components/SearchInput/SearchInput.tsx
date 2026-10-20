@@ -1,7 +1,9 @@
 import SearchIcon from '@mui/icons-material/Search';
 import Autocomplete from '@mui/material/Autocomplete';
 import InputAdornment from '@mui/material/InputAdornment';
+import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import {
   Dispatch,
   SetStateAction,
@@ -9,7 +11,9 @@ import {
   useState
 } from 'react';
 
+import { getStorageImageUrl } from '../../helpers/utils';
 import useDebounce from '../../hooks/useDebounce';
+import { StyledAvatar } from '../../global_styled_components';
 
 export interface SearchInputOption {
   id: string;
@@ -38,24 +42,32 @@ const SearchInput = ({
   setValue,
   value
 }: SearchInputProps) => {
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [isUserTyping, setIsUserTyping] = useState<boolean>(false);
+  const [previousValue, setPreviousValue] = useState<SearchInputOption | null | undefined>(value);
+  const [searchTerm, setSearchTerm] = useState<string>(value?.label ?? '');
+
+  if (value !== previousValue) {
+    setPreviousValue(value);
+    setSearchTerm(value?.label ?? '');
+    setIsUserTyping(false);
+  }
 
   const debouncedSearch = useDebounce(searchTerm);
   useEffect(() => {
-    onSetSearchTerm(debouncedSearch);
-  }, [debouncedSearch, onSetSearchTerm]);
+    if (isUserTyping) {
+      onSetSearchTerm(debouncedSearch);
+    }
+  }, [debouncedSearch, isUserTyping, onSetSearchTerm]);
+
 
   return (
     <Autocomplete
-      disabled={isLoading}
       fullWidth
       inputValue={searchTerm}
-      isOptionEqualToValue={(option, val) => {
-        if (!option?.id || !val?.id) return option?.id === val?.id;
-        return option.id === val.id;
-      }}
+      isOptionEqualToValue={(option, val) => option?.id === val?.id}
       loading={isLoading}
       onChange={(_, newValue) => {
+        setIsUserTyping(false);
         setValue(newValue);
         if (!newValue) {
           setSearchTerm('');
@@ -63,7 +75,10 @@ const SearchInput = ({
         }
       }}
       onInputChange={(_, newInputValue, reason) => {
-        if (reason === 'input') {
+        if (reason === 'input' || reason === 'clear') {
+          setIsUserTyping(true);
+          setSearchTerm(newInputValue);
+        } else if (reason === 'reset') {
           setSearchTerm(newInputValue);
         }
       }}
@@ -84,10 +99,32 @@ const SearchInput = ({
                   {params.InputProps.endAdornment}
                 </InputAdornment>
               ),
+              startAdornment: value?.imageId ? (
+                <InputAdornment position='start'>
+                  <StyledAvatar alt={value?.label} $size='list' src={typeof value?.imageId === 'string' ? getStorageImageUrl(value?.imageId) : ''} />
+                </InputAdornment>
+              ) : null,
             },
           }}
         />
       )}
+      renderOption={(params, option) => {
+        const { key, ...optionProps } = params;
+
+        return (
+          <Stack
+            alignItems='center'
+            component='li'
+            direction='row'
+            key={key}
+            {...optionProps}
+            spacing={1}
+          >
+            {option?.imageId ? (<StyledAvatar alt={option?.label} $size='list' src={typeof option?.imageId === 'string' ? getStorageImageUrl(option?.imageId) : ''} />) : null}
+            <Typography>{option?.label}</Typography>
+          </Stack>
+        );
+      }}
       value={value ?? null}
     />
   );

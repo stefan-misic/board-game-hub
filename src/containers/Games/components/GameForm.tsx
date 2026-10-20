@@ -20,6 +20,7 @@ import SearchInput from '../../../components/SearchInput/SearchInput';
 import { getStorageImageUrl } from '../../../helpers/utils';
 import useIcons from '../../../hooks/useIcons';
 import { searchDesignersService } from '../../../services/designers.services';
+import { searchPublishersService } from '../../../services/publishers.services';
 import { defaultValues, GameFormValues, getSchema } from './GameForm.schema';
 
 interface GameFormProps {
@@ -31,6 +32,7 @@ const GameForm = ({ formData }: GameFormProps) => {
   const { id } = useParams<{ id: string }>();
   const [designersSearchTerm, setDesignersSearchTerm] = useState<string>('');
   const [isDeletionDialogOpen, setIsDeletionDialogOpen] = useState<boolean>(false);
+  const [publishersSearchTerm, setPublishersSearchTerm] = useState<string>('');
   const { t: tb } = useTranslation('buttons');
   const { t: tdi } = useTranslation('dialogs');
   const { t: tg } = useTranslation('games');
@@ -47,16 +49,26 @@ const GameForm = ({ formData }: GameFormProps) => {
 
   useEffect(() => {
     if (formData) {
+      setValue('designer', formData?.designer || null);
       setValue('image_id', formData?.image_id || '');
       setValue('name', formData?.name || '');
+      setValue('publisher', formData?.publisher || null);
       setValue('type', formData?.type || '');
     }
   }, [formData, setValue]);
 
   const { data: designersSearch, isLoading: designersSearchIsLoading } = useQuery({
-    queryKey: ['designers-search'],
+    queryKey: ['designers-search', designersSearchTerm],
     queryFn: () => searchDesignersService(designersSearchTerm ?? ''),
-    enabled: !!designersSearchTerm
+    enabled: designersSearchTerm?.trim()?.length >= 3,
+    placeholderData: (previousData) => previousData
+  });
+
+  const { data: publishersSearch, isLoading: publishersSearchIsLoading } = useQuery({
+    queryKey: ['publishers-search', publishersSearchTerm],
+    queryFn: () => searchPublishersService(publishersSearchTerm ?? ''),
+    enabled: publishersSearchTerm?.trim()?.length >= 3,
+    placeholderData: (previousData) => previousData
   });
 
   const handleGameFormSubmit: SubmitHandler<GameFormValues> = (submittedData: GameFormValues) => {
@@ -141,16 +153,16 @@ const GameForm = ({ formData }: GameFormProps) => {
           <Controller
             control={control}
             name='publisher'
-            render={({ field: { onChange } }) => (
+            render={({ field: { onChange, value } }) => (
               <SearchInput
                 error={!!errors?.publisher}
                 helperText={errors?.publisher?.message}
-                isLoading={false}
+                isLoading={publishersSearchIsLoading}
                 label={tg('publisher')}
-                onSetSearchTerm={() => console.log('')}
-                options={[]}
+                onSetSearchTerm={setPublishersSearchTerm}
+                options={publishersSearch ?? []}
                 setValue={onChange}
-                value={null}
+                value={value}
               />
             )}
           />
