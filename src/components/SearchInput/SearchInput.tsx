@@ -4,12 +4,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState
-} from 'react';
+import { useEffect, useState } from 'react';
 
 import { getStorageImageUrl } from '../../helpers/utils';
 import useDebounce from '../../hooks/useDebounce';
@@ -21,15 +16,15 @@ export interface SearchInputOption {
   label: string;
 }
 interface SearchInputProps {
-    error: boolean;
-    helperText: string | undefined;
-    isLoading: boolean;
-    isRequired?: boolean;
-    label: string;
-    onSetSearchTerm: Dispatch<SetStateAction<string>>
-    options: SearchInputOption[],
-    setValue: Dispatch<SetStateAction<SearchInputOption | null>>;
-    value: SearchInputOption | null | undefined;
+  error: boolean;
+  helperText: string | undefined;
+  isLoading: boolean;
+  isRequired?: boolean;
+  label: string;
+  onSetSearchTerm: (term: string) => void;
+  options: SearchInputOption[],
+  setValue: (id: string) => void;
+  value: string;
 }
 const SearchInput = ({
   error,
@@ -43,13 +38,24 @@ const SearchInput = ({
   value
 }: SearchInputProps) => {
   const [isUserTyping, setIsUserTyping] = useState<boolean>(false);
-  const [previousValue, setPreviousValue] = useState<SearchInputOption | null | undefined>(value);
-  const [searchTerm, setSearchTerm] = useState<string>(value?.label ?? '');
+  const [previousValue, setPreviousValue] = useState<string>(value);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [selectedOption, setSelectedOption] = useState<SearchInputOption | null>(null);
 
   if (value !== previousValue) {
     setPreviousValue(value);
-    setSearchTerm(value?.label ?? '');
     setIsUserTyping(false);
+
+    if (!value) {
+      setSelectedOption(null);
+      setSearchTerm('');
+    } else {
+      const isOptionSelected = options?.find((option) => option?.id === value);
+      if (isOptionSelected) {
+        setSelectedOption(isOptionSelected);
+        setSearchTerm(isOptionSelected?.label);
+      }
+    }
   }
 
   const debouncedSearch = useDebounce(searchTerm);
@@ -68,7 +74,9 @@ const SearchInput = ({
       loading={isLoading}
       onChange={(_, newValue) => {
         setIsUserTyping(false);
-        setValue(newValue);
+        setSelectedOption(newValue);
+        setValue(newValue ? newValue?.id : '');
+        
         if (!newValue) {
           setSearchTerm('');
           onSetSearchTerm('');
@@ -99,9 +107,13 @@ const SearchInput = ({
                   {params.InputProps.endAdornment}
                 </InputAdornment>
               ),
-              startAdornment: value?.imageId ? (
+              startAdornment: selectedOption?.imageId ? (
                 <InputAdornment position='start'>
-                  <StyledAvatar alt={value?.label} $size='list' src={typeof value?.imageId === 'string' ? getStorageImageUrl(value?.imageId) : ''} />
+                  <StyledAvatar
+                    $size='list'
+                    alt={selectedOption?.label}
+                    src={typeof selectedOption?.imageId === 'string' ? getStorageImageUrl(selectedOption?.imageId) : ''}
+                  />
                 </InputAdornment>
               ) : null,
             },
@@ -120,12 +132,18 @@ const SearchInput = ({
             {...optionProps}
             spacing={1}
           >
-            {option?.imageId ? (<StyledAvatar alt={option?.label} $size='list' src={typeof option?.imageId === 'string' ? getStorageImageUrl(option?.imageId) : ''} />) : null}
+            {option?.imageId ? (
+              <StyledAvatar
+                $size='list'
+                alt={option?.label}
+                src={typeof option?.imageId === 'string' ? getStorageImageUrl(option?.imageId) : ''}
+              />)
+              : null}
             <Typography>{option?.label}</Typography>
           </Stack>
         );
       }}
-      value={value ?? null}
+      value={selectedOption}
     />
   );
 };

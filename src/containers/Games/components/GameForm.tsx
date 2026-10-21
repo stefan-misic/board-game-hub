@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router';
 
 import ConfirmationDialog from '../../../components/ConfirmationDialog/ConfirmationDialog';
+import DatePicker from '../../../components/DatePicker/DatePicker';
 import ImageUpload from '../../../components/ImageUpload/ImageUpload';
 import SearchInput from '../../../components/SearchInput/SearchInput';
 import { getStorageImageUrl } from '../../../helpers/utils';
@@ -49,11 +50,13 @@ const GameForm = ({ formData }: GameFormProps) => {
 
   useEffect(() => {
     if (formData) {
-      setValue('designer', formData?.designer || null);
+      setValue('designer_id', formData?.designer_id || '');
       setValue('image_id', formData?.image_id || '');
+      setValue('last_played', formData?.last_played || '');
       setValue('name', formData?.name || '');
-      setValue('publisher', formData?.publisher || null);
+      setValue('publisher_id', formData?.publisher_id || '');
       setValue('type', formData?.type || '');
+      setValue('year', formData?.year || '');
     }
   }, [formData, setValue]);
 
@@ -108,6 +111,7 @@ const GameForm = ({ formData }: GameFormProps) => {
                 helperText={errors?.name?.message}
                 label={tg('name')}
                 onChange={onChange}
+                required={true}
                 value={value}
               />
             )}
@@ -126,7 +130,7 @@ const GameForm = ({ formData }: GameFormProps) => {
                 onSetSearchTerm={() => console.log('')}
                 options={[]}
                 setValue={onChange}
-                value={null}
+                value={''}
               />
             )}
           />
@@ -134,12 +138,13 @@ const GameForm = ({ formData }: GameFormProps) => {
         <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>
           <Controller
             control={control}
-            name='designer'
+            name='designer_id'
             render={({ field: { onChange, value } }) => (
               <SearchInput
-                error={!!errors?.designer}
-                helperText={errors?.designer?.message}
+                error={!!errors?.designer_id}
+                helperText={errors?.designer_id?.message}
                 isLoading={designersSearchIsLoading}
+                isRequired={true}
                 label={tg('designer')}
                 onSetSearchTerm={setDesignersSearchTerm}
                 options={designersSearch ?? []}
@@ -152,12 +157,13 @@ const GameForm = ({ formData }: GameFormProps) => {
         <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>
           <Controller
             control={control}
-            name='publisher'
+            name='publisher_id'
             render={({ field: { onChange, value } }) => (
               <SearchInput
-                error={!!errors?.publisher}
-                helperText={errors?.publisher?.message}
+                error={!!errors?.publisher_id}
+                helperText={errors?.publisher_id?.message}
                 isLoading={publishersSearchIsLoading}
+                isRequired={true}
                 label={tg('publisher')}
                 onSetSearchTerm={setPublishersSearchTerm}
                 options={publishersSearch ?? []}
@@ -172,11 +178,12 @@ const GameForm = ({ formData }: GameFormProps) => {
             control={control}
             name='year'
             render={({ field: { onChange, value } }) => (
-              <TextField
+              <DatePicker
                 error={!!errors?.year}
                 helperText={errors?.year?.message}
                 label={tg('year')}
                 onChange={onChange}
+                type='year'
                 value={value}
               />
             )}
@@ -190,7 +197,7 @@ const GameForm = ({ formData }: GameFormProps) => {
               <TextField
                 error={!!errors?.player_count}
                 helperText={errors?.player_count?.message}
-                label={tg('player_count')}
+                label={tg('playerCount')}
                 onChange={onChange}
                 value={value}
               />
@@ -261,7 +268,7 @@ const GameForm = ({ formData }: GameFormProps) => {
               <TextField
                 error={!!errors?.is_owned}
                 helperText={errors?.is_owned?.message}
-                label={tg('is_owned')}
+                label={tg('isOwned')}
                 onChange={onChange}
                 value={value}
               />
@@ -288,11 +295,12 @@ const GameForm = ({ formData }: GameFormProps) => {
             control={control}
             name='last_played'
             render={({ field: { onChange, value } }) => (
-              <TextField
+              <DatePicker
                 error={!!errors?.last_played}
                 helperText={errors?.last_played?.message}
-                label={tg('last_played')}
+                label={tg('lastPlayed')}
                 onChange={onChange}
+                type='day'
                 value={value}
               />
             )}
