@@ -9,7 +9,7 @@ export interface GameFormValues {
   is_owned: boolean;
   last_played: string;
   name: string;
-  player_count: string;
+  player_count: number[];
   publisher_id: string;
   rating: number | null;
   system_id?: string | null;
@@ -23,7 +23,7 @@ export const defaultValues: GameFormValues = {
   is_owned: false,
   last_played: '',
   name: '',
-  player_count: '',
+  player_count: [1, 4],
   publisher_id: '',
   rating: null,
   system_id: '',
@@ -39,7 +39,7 @@ export const getSchema = (tv: TranslationParam): yup.ObjectSchema<GameFormValues
     is_owned: yup.boolean().required(),
     last_played: yup.string().defined().default(''),
     name: yup.string().required(tv('requiredField')),
-    player_count: yup.string().defined().default(''),
+    player_count: yup.array().of(yup.number().min(1).max(7).required()).min(2).max(2).required(),
     publisher_id: yup.string().required(tv('requiredField')),
     rating: yup.number().nullable().defined().default(null),
     system_id: yup.string().nullable().optional().default(''),

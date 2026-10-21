@@ -1,12 +1,17 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 import Grid from '@mui/material/Grid';
 import InputLabel from '@mui/material/InputLabel';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import MenuItem from '@mui/material/MenuItem';
+import Rating from '@mui/material/Rating';
 import Select from '@mui/material/Select';
+import Slider from '@mui/material/Slider';
 import Stack from '@mui/material/Stack';
+import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
@@ -52,9 +57,12 @@ const GameForm = ({ formData }: GameFormProps) => {
     if (formData) {
       setValue('designer_id', formData?.designer_id || '');
       setValue('image_id', formData?.image_id || '');
+      setValue('is_owned', formData?.is_owned || false);
       setValue('last_played', formData?.last_played || '');
       setValue('name', formData?.name || '');
       setValue('publisher_id', formData?.publisher_id || '');
+      setValue('player_count', formData?.player_count || [1, 4]);
+      setValue('rating', formData?.rating || null);
       setValue('type', formData?.type || '');
       setValue('year', formData?.year || '');
     }
@@ -189,22 +197,58 @@ const GameForm = ({ formData }: GameFormProps) => {
             )}
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>
           <Controller
             control={control}
             name='player_count'
             render={({ field: { onChange, value } }) => (
-              <TextField
-                error={!!errors?.player_count}
-                helperText={errors?.player_count?.message}
-                label={tg('playerCount')}
-                onChange={onChange}
-                value={value}
-              />
+              <FormControl fullWidth>
+                <FormLabel component='legend'>{tg('playerCount')}</FormLabel>
+                <Box sx={{ px: 1 }}>
+                  <Slider
+                    marks={[
+                      {
+                        value: 1,
+                        label: '1',
+                      },
+                      {
+                        value: 2,
+                        label: '2',
+                      },
+                      {
+                        value: 3,
+                        label: '3',
+                      },
+                      {
+                        value: 4,
+                        label: '4',
+                      },
+                      {
+                        value: 5,
+                        label: '5',
+                      },
+                      {
+                        value: 6,
+                        label: '6',
+                      },
+                      {
+                        value: 7,
+                        label: '7+',
+                      },
+                    ]}
+                    max={7}
+                    min={1}
+                    onChange={onChange}
+                    step={1}
+                    value={value}
+                    valueLabelDisplay='auto'
+                  />
+                </Box>
+              </FormControl>
             )}
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }}>
           <Controller
             control={control}
             name='type'
@@ -245,7 +289,7 @@ const GameForm = ({ formData }: GameFormProps) => {
             )}
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }}>
           <Controller
             control={control}
             name='category'
@@ -263,34 +307,28 @@ const GameForm = ({ formData }: GameFormProps) => {
         <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }}>
           <Controller
             control={control}
-            name='is_owned'
+            name='rating'
             render={({ field: { onChange, value } }) => (
-              <TextField
-                error={!!errors?.is_owned}
-                helperText={errors?.is_owned?.message}
-                label={tg('isOwned')}
-                onChange={onChange}
-                value={value}
-              />
+              <FormControl fullWidth>
+                <FormLabel component='legend' sx={{ mb: 0.875 }}>{tg('rating')}</FormLabel>
+                <Rating max={10} onChange={onChange} value={value} />
+              </FormControl>
             )}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }}>
           <Controller
             control={control}
-            name='rating'
+            name='is_owned'
             render={({ field: { onChange, value } }) => (
-              <TextField
-                error={!!errors?.rating}
-                helperText={errors?.rating?.message}
-                label={tg('rating')}
-                onChange={onChange}
-                value={value ?? ''}
-              />
+              <FormControl fullWidth>
+                <FormLabel component='legend'>{tg('isOwned')}</FormLabel>
+                <Switch onChange={onChange} value={value} />
+              </FormControl>
             )}
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }}>
           <Controller
             control={control}
             name='last_played'
