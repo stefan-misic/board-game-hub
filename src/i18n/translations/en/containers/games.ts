@@ -9,6 +9,7 @@ export default {
   isOwned: 'In Collection?',
   lastPlayed: 'Last Played On',
   name: 'Name',
+  noEntries: 'No games available.',
   playerCount: 'Player Count',
   publisher: 'Publisher',
   rating: 'Rating',

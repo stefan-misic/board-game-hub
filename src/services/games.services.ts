@@ -33,3 +33,12 @@ export const createGameService = async (payload: GamePayload): Promise<GameRow> 
 
   return response;
 };
+
+export const readGamesService = async (): Promise<Models.RowList<GameRow>> => {
+  const response = await tablesDB.listRows<GameRow>({
+    databaseId: config.appwriteConfig.databaseId,
+    tableId: gamesTableId
+  });
+
+  return response;
+};
