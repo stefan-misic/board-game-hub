@@ -4,7 +4,18 @@ import FlagFr from '../assets/flags/fr.jpg';
 import FlagGb from '../assets/flags/gb.jpg';
 import FlagUs from '../assets/flags/us.jpg';
 import config from '../config';
-import { Country } from '../types/global.types';
+import { Category, Country } from '../types/global.types';
+
+const availableCategories: Category[] = [
+  {
+    id: 'conf',
+    name: 'conflict'
+  },
+  {
+    id: 'solo-tact',
+    name: 'soloTactical'
+  }
+];
 
 const availableCountries: Country[] = [
   {
@@ -42,6 +53,10 @@ const availableCountries: Country[] = [
 export const createErrorMessage = (error: Error | unknown): string => {
   const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
   return errorMessage;
+};
+
+export const getCategories = (): Category[] => {
+  return availableCategories;
 };
 
 export const getCountries = (): Country[] => {

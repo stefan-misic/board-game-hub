@@ -13,26 +13,32 @@ import Slider from '@mui/material/Slider';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router';
 
 import ConfirmationDialog from '../../../components/ConfirmationDialog/ConfirmationDialog';
 import DatePicker from '../../../components/DatePicker/DatePicker';
 import ImageUpload from '../../../components/ImageUpload/ImageUpload';
 import SearchInput from '../../../components/SearchInput/SearchInput';
-import { getStorageImageUrl } from '../../../helpers/utils';
+import { createErrorMessage, getCategories, getStorageImageUrl } from '../../../helpers/utils';
 import useIcons from '../../../hooks/useIcons';
 import { searchDesignersService } from '../../../services/designers.services';
+import { createGameService } from '../../../services/games.services';
 import { searchPublishersService } from '../../../services/publishers.services';
+import { StoreDispatch } from '../../../store';
+import { setHasMessage, setIsLoading } from '../../../store/global.slice';
 import { defaultValues, GameFormValues, getSchema } from './GameForm.schema';
 
 interface GameFormProps {
   formData?: GameFormValues | null | undefined
 }
 const GameForm = ({ formData }: GameFormProps) => {
+  const categories = getCategories();
+  const dispatch = useDispatch<StoreDispatch>();
   const { buttons: buttonIcons, games: gameIcons } = useIcons();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -52,9 +58,11 @@ const GameForm = ({ formData }: GameFormProps) => {
     handleSubmit,
     setValue
   } = useForm<GameFormValues>({ defaultValues, resolver: yupResolver(schema) });
+  const formTypeValue = useWatch({ control, name: 'type' });
 
   useEffect(() => {
     if (formData) {
+      setValue('category', formData?.category || '');
       setValue('designer_id', formData?.designer_id || '');
       setValue('image_id', formData?.image_id || '');
       setValue('is_owned', formData?.is_owned || false);
@@ -63,7 +71,8 @@ const GameForm = ({ formData }: GameFormProps) => {
       setValue('publisher_id', formData?.publisher_id || '');
       setValue('player_count', formData?.player_count || [1, 4]);
       setValue('rating', formData?.rating || null);
-      setValue('type', formData?.type || '');
+      setValue('system_id', formData?.system_id || '');
+      setValue('type', formData?.type || 'system'); 
       setValue('year', formData?.year || '');
     }
   }, [formData, setValue]);
@@ -82,11 +91,26 @@ const GameForm = ({ formData }: GameFormProps) => {
     placeholderData: (previousData) => previousData
   });
 
+  const { mutate: createGameMutation } = useMutation({
+    mutationFn: (gameData: GameFormValues) => {
+      dispatch(setIsLoading(true));
+      return createGameService(gameData);
+    },
+    onSuccess: (response) => {
+      navigate(`/games/${response?.$id}`);
+      dispatch(setHasMessage({ hasMessage: true, message: tg('gameCreated'), messageType: 'success' }));
+    },
+    onError: (error) => {
+      dispatch(setIsLoading(false));
+      dispatch(setHasMessage({ hasMessage: true, message: createErrorMessage(error), messageType: 'error' }));
+    }
+  });
+
   const handleGameFormSubmit: SubmitHandler<GameFormValues> = (submittedData: GameFormValues) => {
     if (id) {
       console.log(submittedData);
     } else {
-      console.log(submittedData);
+      createGameMutation(submittedData);
     }
   };
 
@@ -125,24 +149,27 @@ const GameForm = ({ formData }: GameFormProps) => {
             )}
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>
-          <Controller
-            control={control}
-            name='system_id'
-            render={({ field: { onChange } }) => (
-              <SearchInput
-                error={!!errors?.system_id}
-                helperText={errors?.system_id?.message}
-                isLoading={false}
-                label={tg('system')}
-                onSetSearchTerm={() => console.log('')}
-                options={[]}
-                setValue={onChange}
-                value={''}
-              />
-            )}
-          />
-        </Grid>
+        {formTypeValue !== 'system' && (
+          <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>
+            <Controller
+              control={control}
+              name='system_id'
+              render={({ field: { onChange, value } }) => (
+                <SearchInput
+                  error={!!errors?.system_id}
+                  helperText={errors?.system_id?.message}
+                  isLoading={false}
+                  isRequired={true}
+                  label={tg('system')}
+                  onSetSearchTerm={() => console.log('')}
+                  options={[]}
+                  setValue={onChange}
+                  value={value ?? ''}
+                />
+              )}
+            />
+          </Grid>
+        )}
         <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>
           <Controller
             control={control}
@@ -294,13 +321,29 @@ const GameForm = ({ formData }: GameFormProps) => {
             control={control}
             name='category'
             render={({ field: { onChange, value } }) => (
-              <TextField
-                error={!!errors?.category}
-                helperText={errors?.category?.message}
-                label={tg('category')}
-                onChange={onChange}
-                value={value}
-              />
+              <FormControl fullWidth>
+                <InputLabel id='game-category-label'>{tg('category')}</InputLabel>
+                <Select
+                  id='game-category'
+                  label={tg('category')}
+                  labelId='game-category-label'
+                  onChange={onChange}
+                  renderValue={(selectedId) => {
+                    const selectedCategory = categories?.find((category) => category.id === selectedId);
+                    if (!selectedCategory) return '';
+                    return (
+                      <span>{tg(selectedCategory.name)}</span>
+                    );
+                  }}
+                  value={value ?? ''}
+                >
+                  {categories?.map((category) => (
+                    <MenuItem key={category?.id} value={category?.id ?? ''}>
+                      {tg(category.name)}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             )}
           />
         </Grid>

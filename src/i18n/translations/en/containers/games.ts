@@ -1,9 +1,11 @@
 export default {
   avatar: 'Avatar',
   category: 'Category',
+  conflict: 'Conflict',
   designer: 'Designer',
   edition: 'Edition',
   expansion: 'Expansion',
+  gameCreated: 'Game created.',
   isOwned: 'In Collection?',
   lastPlayed: 'Last Played On',
   name: 'Name',
@@ -11,6 +13,7 @@ export default {
   publisher: 'Publisher',
   rating: 'Rating',
   sequel: 'Sequel',
+  soloTactical: 'Solo - Tactical',
   system: 'System',
   type: 'Type',
   year: 'Year Designed'
