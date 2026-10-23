@@ -6,6 +6,7 @@ export default {
   edition: 'Edition',
   expansion: 'Expansion',
   gameCreated: 'Game created.',
+  gameDeleted: 'Game deleted.',
   isOwned: 'In Collection?',
   lastPlayed: 'Last Played On',
   name: 'Name',

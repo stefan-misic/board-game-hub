@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,17 +20,18 @@ import {
   StyledLabel,
   StyledValue
 } from '../../../global_styled_components';
-import { getStorageImageUrl } from '../../../helpers/utils';
+import { createErrorMessage, getStorageImageUrl } from '../../../helpers/utils';
 import useIcons from '../../../hooks/useIcons';
-import { GameRow, readGamesService } from '../../../services/games.services';
+import { deleteGameService, GameRow, readGamesService } from '../../../services/games.services';
 import { StoreDispatch, StoreState } from '../../../store';
-import { setIsLoading } from '../../../store/global.slice';
+import { setHasMessage, setIsLoading } from '../../../store/global.slice';
 import { selectIsCurrentUserAdmin } from '../../../store/user.slice';
 
 const GamesListPage = () => {
   const dispatch = useDispatch<StoreDispatch>();
   const { buttons: buttonIcons } = useIcons();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const isCurrentUserAdmin = useSelector<StoreState, boolean>(selectIsCurrentUserAdmin);
   const [isDeletionDialogOpen, setIsDeletionDialogOpen] = useState<boolean>(false);
   const [interactedEntry, setInteractedEntry] = useState<GameRow | null>(null);
@@ -56,6 +57,30 @@ const GamesListPage = () => {
       dispatch(setIsLoading(false));
     }
   }, [dispatch, gamesListIsLoading]);
+
+  const { mutate: deleteGameMutation } = useMutation({
+    mutationFn: () => {
+      if (!interactedEntry?.$id) {
+        throw new Error('No entry selected');
+      }
+
+      dispatch(setIsLoading(true));
+      return deleteGameService(interactedEntry?.$id);
+    },
+    onSuccess: () => {
+      setIsDeletionDialogOpen(false);
+      queryClient.invalidateQueries({ queryKey: ['games-list'] });
+      dispatch(setIsLoading(false));
+      dispatch(setHasMessage({ hasMessage: true, message: tg('gameDeleted'), messageType: 'success' }));
+      setInteractedEntry(null);
+    },
+    onError: (error) => {
+      setIsDeletionDialogOpen(false);
+      dispatch(setIsLoading(false));
+      dispatch(setHasMessage({ hasMessage: true, message: createErrorMessage(error), messageType: 'error' }));
+      setInteractedEntry(null);
+    }
+  });
 
   return (
     <PageContainer elevation={4}>
@@ -93,11 +118,11 @@ const GamesListPage = () => {
               <>
                 <Stack>
                   <StyledLabel $size='list'>{tg('designer')}</StyledLabel>
-                  <StyledValue $size='list'>{game?.designer_id || '-'}</StyledValue>
+                  <StyledValue $size='list'>{game?.designer?.display_name || '-'}</StyledValue>
                 </Stack>
                 <Stack>
                   <StyledLabel $size='list'>{tg('publisher')}</StyledLabel>
-                  <StyledValue $size='list'>{game?.publisher_id || '-'}</StyledValue>
+                  <StyledValue $size='list'>{game?.publisher?.name || '-'}</StyledValue>
                 </Stack>
               </>
             )}
@@ -162,7 +187,7 @@ const GamesListPage = () => {
         confirmationButton={
           <Button
             color='error'
-            onClick={() => console.log('delete')} 
+            onClick={() => deleteGameMutation()} 
             startIcon={buttonIcons.deleteConfirm}
             variant='contained'
           >
