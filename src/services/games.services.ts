@@ -56,6 +56,23 @@ export const deleteGameService = async (id: string): Promise<Record<string, neve
   return response;
 };
 
+export const readGameService = async (id: string): Promise<GameRow> => {
+  const response = await tablesDB.getRow<GameRow>({
+    databaseId: config.appwriteConfig.databaseId,
+    tableId: gamesTableId,
+    rowId: id,
+    queries: [
+      Query.select([
+        '*',
+        'designer.*',
+        'publisher.*'
+      ])
+    ]
+  });
+
+  return response;
+};
+
 export const readGamesService = async (): Promise<Models.RowList<GameRow>> => {
   const response = await tablesDB.listRows<GameRow>({
     databaseId: config.appwriteConfig.databaseId,

@@ -10,6 +10,7 @@ export default {
   isOwned: 'In Collection?',
   lastPlayed: 'Last Played On',
   name: 'Name',
+  no: 'No',
   noEntries: 'No games available.',
   playerCount: 'Player Count',
   publisher: 'Publisher',
@@ -18,5 +19,6 @@ export default {
   soloTactical: 'Solo - Tactical',
   system: 'System',
   type: 'Type',
-  year: 'Year Designed'
+  year: 'Year Designed',
+  yes: 'Yes'
 };
