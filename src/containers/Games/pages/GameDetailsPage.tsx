@@ -64,10 +64,10 @@ const GameDetailsPage = () => {
             <StyledLabel>{tg('name')}</StyledLabel>
             <StyledValue>{gameDetails?.name || '-'}</StyledValue>
           </Grid>
-          {gameDetails?.system_id && (
+          {gameDetails?.system && (
             <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>
               <StyledLabel>{tg('system')}</StyledLabel>
-              <StyledValue>{gameDetails?.system_id || '-'}</StyledValue>
+              <StyledValue>{gameDetails?.system?.name || '-'}</StyledValue>
             </Grid>
           )}
           <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>

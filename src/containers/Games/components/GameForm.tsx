@@ -27,7 +27,7 @@ import SearchInput from '../../../components/SearchInput/SearchInput';
 import { createErrorMessage, getCategories, getStorageImageUrl } from '../../../helpers/utils';
 import useIcons from '../../../hooks/useIcons';
 import { searchDesignersService } from '../../../services/designers.services';
-import { createGameService } from '../../../services/games.services';
+import { createGameService, searchGamesService } from '../../../services/games.services';
 import { searchPublishersService } from '../../../services/publishers.services';
 import { StoreDispatch } from '../../../store';
 import { setHasMessage, setIsLoading } from '../../../store/global.slice';
@@ -43,6 +43,7 @@ const GameForm = ({ formData }: GameFormProps) => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [designersSearchTerm, setDesignersSearchTerm] = useState<string>('');
+  const [gamesSearchTerm, setGamesSearchTerm] = useState<string>('');
   const [isDeletionDialogOpen, setIsDeletionDialogOpen] = useState<boolean>(false);
   const [publishersSearchTerm, setPublishersSearchTerm] = useState<string>('');
   const { t: tb } = useTranslation('buttons');
@@ -81,6 +82,13 @@ const GameForm = ({ formData }: GameFormProps) => {
     queryKey: ['designers-search', designersSearchTerm],
     queryFn: () => searchDesignersService(designersSearchTerm ?? ''),
     enabled: designersSearchTerm?.trim()?.length >= 3,
+    placeholderData: (previousData) => previousData
+  });
+
+  const { data: gamesSearch, isLoading: gamesSearchIsLoading } = useQuery({
+    queryKey: ['games-search', gamesSearchTerm],
+    queryFn: () => searchGamesService(gamesSearchTerm ?? ''),
+    enabled: gamesSearchTerm?.trim()?.length >= 3,
     placeholderData: (previousData) => previousData
   });
 
@@ -158,11 +166,11 @@ const GameForm = ({ formData }: GameFormProps) => {
                 <SearchInput
                   error={!!errors?.system_id}
                   helperText={errors?.system_id?.message}
-                  isLoading={false}
+                  isLoading={gamesSearchIsLoading}
                   isRequired={true}
                   label={tg('system')}
-                  onSetSearchTerm={() => console.log('')}
-                  options={[]}
+                  onSetSearchTerm={setGamesSearchTerm}
+                  options={gamesSearch ?? []}
                   setValue={onChange}
                   value={value ?? ''}
                 />
