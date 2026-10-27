@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
 import InputLabel from '@mui/material/InputLabel';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import MenuItem from '@mui/material/MenuItem';
@@ -12,10 +13,17 @@ import Select from '@mui/material/Select';
 import Slider from '@mui/material/Slider';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
+import Tooltip from '@mui/material/Tooltip';
 import TextField from '@mui/material/TextField';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form';
+import {
+  Controller,
+  SubmitHandler,
+  useFieldArray,
+  useForm,
+  useWatch
+} from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router';
@@ -27,7 +35,7 @@ import SearchInput from '../../../components/SearchInput/SearchInput';
 import { createErrorMessage, getCategories, getStorageImageUrl } from '../../../helpers/utils';
 import useIcons from '../../../hooks/useIcons';
 import { searchDesignersService } from '../../../services/designers.services';
-import { createGameService, searchGamesService } from '../../../services/games.services';
+import { createGameService, GamePayload, searchGamesService } from '../../../services/games.services';
 import { searchPublishersService } from '../../../services/publishers.services';
 import { StoreDispatch } from '../../../store';
 import { setHasMessage, setIsLoading } from '../../../store/global.slice';
@@ -59,12 +67,16 @@ const GameForm = ({ formData }: GameFormProps) => {
     handleSubmit,
     setValue
   } = useForm<GameFormValues>({ defaultValues, resolver: yupResolver(schema) });
+  const { fields: designerIds, remove } = useFieldArray({
+    control,
+    name: 'designer_ids'
+  });
   const formTypeValue = useWatch({ control, name: 'type' });
 
   useEffect(() => {
     if (formData) {
       setValue('category', formData?.category || '');
-      setValue('designer_id', formData?.designer_id || '');
+      setValue('designer_ids', formData?.designer_ids || []);
       setValue('image_id', formData?.image_id || '');
       setValue('is_owned', formData?.is_owned || false);
       setValue('last_played', formData?.last_played || '');
@@ -100,7 +112,7 @@ const GameForm = ({ formData }: GameFormProps) => {
   });
 
   const { mutate: createGameMutation } = useMutation({
-    mutationFn: (gameData: GameFormValues) => {
+    mutationFn: (gameData: GamePayload) => {
       dispatch(setIsLoading(true));
       return createGameService(gameData);
     },
@@ -115,10 +127,14 @@ const GameForm = ({ formData }: GameFormProps) => {
   });
 
   const handleGameFormSubmit: SubmitHandler<GameFormValues> = (submittedData: GameFormValues) => {
+    const payloadData = {
+      ...submittedData,
+      designer_ids: submittedData?.designer_ids?.map((designer) => designer.value) ?? []
+    };
     if (id) {
-      console.log(submittedData);
+      console.log(payloadData);
     } else {
-      createGameMutation(submittedData);
+      createGameMutation(payloadData);
     }
   };
 
@@ -178,25 +194,55 @@ const GameForm = ({ formData }: GameFormProps) => {
             />
           </Grid>
         )}
-        <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>
-          <Controller
-            control={control}
-            name='designer_id'
-            render={({ field: { onChange, value } }) => (
-              <SearchInput
-                error={!!errors?.designer_id}
-                helperText={errors?.designer_id?.message}
-                isLoading={designersSearchIsLoading}
-                isRequired={true}
-                label={tg('designer')}
-                onSetSearchTerm={setDesignersSearchTerm}
-                options={designersSearch ?? []}
-                setValue={onChange}
-                value={value}
+        {designerIds?.map((_, i) => (
+          <Grid key={i} size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>
+            <Stack alignItems='center' direction='row' gap={1}>
+              <Controller
+                control={control}
+                name={`designer_ids.${i}`}
+                render={({ field: { onChange, value, ...controllerField } }) => (
+                  <SearchInput
+                    {...controllerField}
+                    error={!!errors?.designer_ids?.[i]}
+                    helperText={errors?.designer_ids?.[i]?.value?.message}
+                    isLoading={designersSearchIsLoading}
+                    isRequired={true}
+                    label={tg('designer')}
+                    onSetSearchTerm={setDesignersSearchTerm}
+                    options={designersSearch ?? []}
+                    setValue={(selectedId) => onChange({ value: selectedId })}
+                    value={value?.value ?? ''} 
+                  />
+                )}
               />
-            )}
-          />
-        </Grid>
+              {i > 0 && (
+                <Tooltip title={tb('delete')}>
+                  <IconButton
+                    color='error'
+                    onClick={() => remove(i)}
+                    size='small'
+                  >
+                    {buttonIcons.deleteList}
+                  </IconButton>
+                </Tooltip>
+              )}
+              {i === designerIds?.length - 1 && (
+                <Tooltip title={tb('add')}>
+                  <IconButton
+                    color='primary'
+                    onClick={() => {
+                      const updatedDesignerIds = [...getValues('designer_ids'), { value: '' }];
+                      setValue('designer_ids', updatedDesignerIds, { shouldDirty: true });
+                    }}
+                    size='small'
+                  >
+                    {buttonIcons.add}
+                  </IconButton>
+                </Tooltip>
+              )}
+            </Stack>
+          </Grid>
+        ))}
         <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>
           <Controller
             control={control}

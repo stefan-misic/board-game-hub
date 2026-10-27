@@ -117,8 +117,8 @@ const GamesListPage = () => {
             {!isMobile && (
               <>
                 <Stack>
-                  <StyledLabel $size='list'>{tg('designer')}</StyledLabel>
-                  <StyledValue $size='list'>{game?.designer?.display_name || '-'}</StyledValue>
+                  <StyledLabel $size='list'>{tg('designers')}</StyledLabel>
+                  <StyledValue $size='list'>{game?.designers?.length ? game?.designers?.map((designer) => designer?.display_name).join(', ') : '-'}</StyledValue>
                 </Stack>
                 <Stack>
                   <StyledLabel $size='list'>{tg('publisher')}</StyledLabel>

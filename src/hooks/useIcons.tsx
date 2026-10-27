@@ -6,6 +6,7 @@ import CasinoIcon from '@mui/icons-material/Casino';
 import CloseIcon from '@mui/icons-material/Close';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
+import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditDocumentIcon from '@mui/icons-material/EditDocument';
@@ -22,6 +23,7 @@ import { ReactElement } from 'react';
 
 interface ButtonIcons {
   [key: string]: ReactElement; 
+  add: ReactElement;
   cancel: ReactElement;
   close: ReactElement;
   create: ReactElement;
@@ -87,6 +89,7 @@ const useIcons = (): UseIcons => {
   };
 
   const buttons: ButtonIcons = {
+    add: <ControlPointIcon fontSize='small' />,
     cancel: <UndoIcon />,
     close: <CloseIcon fontSize='small' />,
     create: <AssignmentAddIcon />,

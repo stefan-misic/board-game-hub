@@ -13,9 +13,9 @@ const gameRelationshipsTableId = 'game_relationships';
 const gamesTableId = 'games';
 
 export type GameType = 'system' | 'edition' | 'expansion' | 'sequel';
-interface GamePayload {
+export interface GamePayload {
   category: Category['id'];
-  designer_id: string;
+  designer_ids: string[];
   image_id: string;
   is_owned: boolean;
   last_played: string;
@@ -23,17 +23,17 @@ interface GamePayload {
   player_count: number[];
   publisher_id: string;
   rating: number | null;
-  system_id?: string;
+  system_id: string;
   type: GameType;
   year: string;
 }
-export type GameRow = Models.Row & Omit<GamePayload, 'designer_id' | 'publisher_id' | 'system_id'> & {
-  designer: DesignerRow;
+export type GameRow = Models.Row & Omit<GamePayload, 'designer_ids' | 'publisher_id' | 'system_id'> & {
+  designers: DesignerRow[];
   publisher: PublisherRow;
   system: GameRow | null;
 };
 export const createGameService = async (payload: GamePayload): Promise<GameRow> => {
-  const { designer_id, publisher_id, system_id, ...rest } = payload;
+  const { designer_ids, publisher_id, system_id, ...rest } = payload;
 
   const response = await tablesDB.createRow<GameRow>({
     databaseId: config.appwriteConfig.databaseId,
@@ -41,7 +41,7 @@ export const createGameService = async (payload: GamePayload): Promise<GameRow> 
     rowId: uuid(),
     data: {
       ...rest,
-      designer: designer_id,
+      designers: designer_ids,
       publisher: publisher_id,
     } as unknown as GameRow
   });
@@ -85,7 +85,7 @@ export const readGameService = async (id: string): Promise<GameRow> => {
     queries: [
       Query.select([
         '*',
-        'designer.*',
+        'designers.*',
         'publisher.*'
       ])
     ]
@@ -124,7 +124,7 @@ export const readGamesService = async (): Promise<Models.RowList<GameRow>> => {
     queries: [
       Query.select([
         '*',
-        'designer.*',
+        'designers.*',
         'publisher.*'
       ])
     ]

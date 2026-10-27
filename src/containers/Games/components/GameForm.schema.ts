@@ -6,7 +6,7 @@ import { GameType } from '../../../services/games.services';
 
 export interface GameFormValues {
   category: Category['id'];
-  designer_id: string;
+  designer_ids: { value: string }[];
   image_id: string;
   is_owned: boolean;
   last_played: string;
@@ -14,13 +14,13 @@ export interface GameFormValues {
   player_count: number[];
   publisher_id: string;
   rating: number | null;
-  system_id?: string;
+  system_id: string;
   type: GameType;
   year: string;
 }
 export const defaultValues: GameFormValues = {
   category: '',
-  designer_id: '',
+  designer_ids: [{ value: '' }], 
   image_id: '',
   is_owned: false,
   last_played: '',
@@ -36,7 +36,7 @@ export const defaultValues: GameFormValues = {
 export const getSchema = (tv: TranslationParam): yup.ObjectSchema<GameFormValues> =>
   yup.object({
     category: yup.string().defined().default(''),
-    designer_id: yup.string().required(tv('requiredField')),
+    designer_ids: yup.array().of(yup.object({ value: yup.string().required() })).min(1, tv('requiredField')).required(tv('requiredField')),
     image_id: yup.string().defined().default(''),
     is_owned: yup.boolean().required(),
     last_played: yup.string().defined().default(''),

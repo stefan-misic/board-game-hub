@@ -19,7 +19,12 @@ import ConfirmationDialog from '../../../components/ConfirmationDialog/Confirmat
 import ImageUpload from '../../../components/ImageUpload/ImageUpload';
 import { createErrorMessage, getCountries, getStorageImageUrl } from '../../../helpers/utils';
 import useIcons from '../../../hooks/useIcons';
-import { createPublisherService, deletePublisherService, updatePublisherService } from '../../../services/publishers.services';
+import {
+  createPublisherService,
+  deletePublisherService,
+  PublisherPayload,
+  updatePublisherService
+} from '../../../services/publishers.services';
 import { StoreDispatch } from '../../../store';
 import { setHasMessage, setIsLoading } from '../../../store/global.slice';
 import { defaultValues, getSchema, PublisherFormValues } from './PublisherForm.schema';
@@ -58,7 +63,7 @@ const PublisherForm = ({ formData }: PublisherFormProps) => {
   }, [countries, formData, setValue]);
 
   const { mutate: createPublisherMutation } = useMutation({
-    mutationFn: (publisherData: PublisherFormValues) => {
+    mutationFn: (publisherData: PublisherPayload) => {
       dispatch(setIsLoading(true));
       return createPublisherService(publisherData);
     },
@@ -90,7 +95,7 @@ const PublisherForm = ({ formData }: PublisherFormProps) => {
   });
   
   const { mutate: updatePublisherMutation } = useMutation({
-    mutationFn: (publisherData: PublisherFormValues) => {
+    mutationFn: (publisherData: PublisherPayload) => {
       dispatch(setIsLoading(true));
       return updatePublisherService(id ?? '', publisherData);
     },

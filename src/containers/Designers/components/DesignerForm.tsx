@@ -19,7 +19,12 @@ import ConfirmationDialog from '../../../components/ConfirmationDialog/Confirmat
 import ImageUpload from '../../../components/ImageUpload/ImageUpload';
 import { createErrorMessage, getStorageImageUrl } from '../../../helpers/utils';
 import useIcons from '../../../hooks/useIcons';
-import { createDesignerService, deleteDesignerService, updateDesignerService } from '../../../services/designers.services';
+import {
+  createDesignerService,
+  deleteDesignerService,
+  DesignerPayload,
+  updateDesignerService
+} from '../../../services/designers.services';
 import { StoreDispatch } from '../../../store';
 import { setHasMessage, setIsLoading } from '../../../store/global.slice';
 import { defaultValues, DesignerFormValues, getSchema } from './DesignerForm.schema';
@@ -57,7 +62,7 @@ const DesignerForm = ({ formData }: DesignerFormProps) => {
   }, [formData, setValue]);
 
   const { mutate: createDesignerMutation } = useMutation({
-    mutationFn: (designerData: DesignerFormValues) => {
+    mutationFn: (designerData: DesignerPayload) => {
       dispatch(setIsLoading(true));
       return createDesignerService(designerData);
     },
@@ -89,7 +94,7 @@ const DesignerForm = ({ formData }: DesignerFormProps) => {
   });
 
   const { mutate: updateDesignerMutation } = useMutation({
-    mutationFn: (designerData: DesignerFormValues) => {
+    mutationFn: (designerData: DesignerPayload) => {
       dispatch(setIsLoading(true));
       return updateDesignerService(id ?? '', designerData);
     },

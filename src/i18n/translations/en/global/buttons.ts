@@ -1,4 +1,5 @@
 export default {
+  add: 'Add',
   cancel: 'Cancel',
   create: 'New Entry',
   createConfirm: 'Confirm New Entry',

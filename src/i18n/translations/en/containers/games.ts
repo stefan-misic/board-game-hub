@@ -3,6 +3,7 @@ export default {
   category: 'Category',
   conflict: 'Conflict',
   designer: 'Designer',
+  designers: 'Designers',
   edition: 'Edition',
   expansion: 'Expansion',
   gameCreated: 'Game created.',

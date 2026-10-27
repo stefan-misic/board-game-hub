@@ -71,8 +71,8 @@ const GameDetailsPage = () => {
             </Grid>
           )}
           <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>
-            <StyledLabel>{tg('designer')}</StyledLabel>
-            <StyledValue>{gameDetails?.designer?.display_name || '-'}</StyledValue>
+            <StyledLabel>{tg('designers')}</StyledLabel>
+            <StyledValue>{gameDetails?.designers?.length ? gameDetails?.designers?.map((designer) => designer?.display_name).join(', ') : '-'}</StyledValue>
           </Grid>
           <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>
             <StyledLabel>{tg('publisher')}</StyledLabel>

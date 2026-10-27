@@ -9,7 +9,7 @@ import { tablesDB } from '../lib/appwrite';
 const designersTableId = 'designers';
 
 export type DesignerType = 'top' | 'essential' | 'other';
-interface DesignerPayload {
+export interface DesignerPayload {
   display_name: string;
   image_id: string;
   name: string;

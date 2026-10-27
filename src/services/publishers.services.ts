@@ -10,7 +10,7 @@ import { Country } from '../types/global.types';
 const publishersTableId = 'publishers';
 
 export type PublisherType = 'essential' | 'other';
-interface PublisherPayload {
+export interface PublisherPayload {
   country: Country['id'];
   image_id: string;
   name: string;
