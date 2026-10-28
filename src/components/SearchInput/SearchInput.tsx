@@ -4,7 +4,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { getStorageImageUrl } from '../../helpers/utils';
 import useDebounce from '../../hooks/useDebounce';
@@ -16,6 +16,7 @@ export interface SearchInputOption {
   label: string;
 }
 interface SearchInputProps {
+  defaultValue?: SearchInputOption | null;
   error: boolean;
   helperText: string | undefined;
   isLoading: boolean;
@@ -27,6 +28,7 @@ interface SearchInputProps {
   value: string;
 }
 const SearchInput = ({
+  defaultValue = null,
   error,
   helperText,
   isLoading,
@@ -37,46 +39,34 @@ const SearchInput = ({
   setValue,
   value
 }: SearchInputProps) => {
-  const [isUserTyping, setIsUserTyping] = useState<boolean>(false);
-  const [previousValue, setPreviousValue] = useState<string>(value);
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [selectedOption, setSelectedOption] = useState<SearchInputOption | null>(null);
 
-  if (value !== previousValue) {
-    setPreviousValue(value);
-    setIsUserTyping(false);
+  const selectedOption = useMemo(() => {
+    if (!value) return null;
 
-    if (!value) {
-      setSelectedOption(null);
-      setSearchTerm('');
-    } else {
-      const isOptionSelected = options?.find((option) => option?.id === value);
-      if (isOptionSelected) {
-        setSelectedOption(isOptionSelected);
-        setSearchTerm(isOptionSelected?.label);
-      }
-    }
-  }
+    return (
+      options?.find((option) => option?.id === value) ||
+      (defaultValue?.id === value ? defaultValue : null)
+    );
+  }, [defaultValue, options, value]);
 
   const debouncedSearch = useDebounce(searchTerm);
   useEffect(() => {
-    if (isUserTyping) {
+    if (debouncedSearch && debouncedSearch.trim().length >= 3 && debouncedSearch !== selectedOption?.label) {
       onSetSearchTerm(debouncedSearch);
+    } else if (debouncedSearch.trim().length === 0) {
+      onSetSearchTerm('');
     }
-  }, [debouncedSearch, isUserTyping, onSetSearchTerm]);
+  }, [debouncedSearch, onSetSearchTerm, selectedOption?.label]);
 
 
   return (
     <Autocomplete
       fullWidth
-      inputValue={searchTerm}
       isOptionEqualToValue={(option, val) => option?.id === val?.id}
       loading={isLoading}
       onChange={(_, newValue) => {
-        setIsUserTyping(false);
-        setSelectedOption(newValue);
         setValue(newValue ? newValue?.id : '');
-        
         if (!newValue) {
           setSearchTerm('');
           onSetSearchTerm('');
@@ -84,9 +74,6 @@ const SearchInput = ({
       }}
       onInputChange={(_, newInputValue, reason) => {
         if (reason === 'input' || reason === 'clear') {
-          setIsUserTyping(true);
-          setSearchTerm(newInputValue);
-        } else if (reason === 'reset') {
           setSearchTerm(newInputValue);
         }
       }}

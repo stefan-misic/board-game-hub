@@ -31,7 +31,7 @@ import { useNavigate, useParams } from 'react-router';
 import ConfirmationDialog from '../../../components/ConfirmationDialog/ConfirmationDialog';
 import DatePicker from '../../../components/DatePicker/DatePicker';
 import ImageUpload from '../../../components/ImageUpload/ImageUpload';
-import SearchInput from '../../../components/SearchInput/SearchInput';
+import SearchInput, { SearchInputOption } from '../../../components/SearchInput/SearchInput';
 import { createErrorMessage, getCategories, getStorageImageUrl } from '../../../helpers/utils';
 import useIcons from '../../../hooks/useIcons';
 import { searchDesignersService } from '../../../services/designers.services';
@@ -42,9 +42,12 @@ import { setHasMessage, setIsLoading } from '../../../store/global.slice';
 import { defaultValues, GameFormValues, getSchema } from './GameForm.schema';
 
 interface GameFormProps {
-  formData?: GameFormValues | null | undefined
+  formData?: GameFormValues | null | undefined;
+  selectedDesigners?: SearchInputOption[] | null;
+  selectedSystem?: SearchInputOption | null;
+  selectedPublisher?: SearchInputOption | null;
 }
-const GameForm = ({ formData }: GameFormProps) => {
+const GameForm = ({ formData, selectedPublisher }: GameFormProps) => {
   const categories = getCategories();
   const dispatch = useDispatch<StoreDispatch>();
   const { buttons: buttonIcons, games: gameIcons } = useIcons();
@@ -249,6 +252,7 @@ const GameForm = ({ formData }: GameFormProps) => {
             name='publisher_id'
             render={({ field: { onChange, value } }) => (
               <SearchInput
+                defaultValue={selectedPublisher}
                 error={!!errors?.publisher_id}
                 helperText={errors?.publisher_id?.message}
                 isLoading={publishersSearchIsLoading}
@@ -257,7 +261,7 @@ const GameForm = ({ formData }: GameFormProps) => {
                 onSetSearchTerm={setPublishersSearchTerm}
                 options={publishersSearch ?? []}
                 setValue={onChange}
-                value={value}
+                value={value ?? ''}
               />
             )}
           />
